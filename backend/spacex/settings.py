@@ -40,6 +40,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'core',
+    'mission',
+    'rocket',
+    'first_stage',
+    'second_stage',
+    'fairings',
+    'ships',
+    'telemetry',
+    'launch_site',
+    'links',
+    'timeline',
+    'core.urls'
 ]
 
 MIDDLEWARE = [

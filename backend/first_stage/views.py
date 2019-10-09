@@ -1,20 +1,20 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import Launches
-from .serializer import LaunchesSerializer
+from rocket.models import FirstStage
+from .serializer import FirstStageSerializer
 
 
-class LaunchesViewSet(viewsets.ModelViewSet):
+class FirstStageViewSet(viewsets.ModelViewSet):
     """
         A simple ViewSet for viewing and editing.
     """
 
-    queryset = Launches.objects.all()
-    serializer_class = LaunchesSerializer
+    queryset = FirstStage.objects.all()
+    serializer_class = FirstStageSerializer
 
     def get_queryset(self):
-        return Launches.objects.all()
+        return FirstStage.objects.all()
 
     def list(self, request, *args, **kwargs):
         """
@@ -24,6 +24,6 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = Launches.objects.all()
-        serializer = LaunchesSerializer(queryset, many=True)
+        queryset = FirstStage.objects.all()
+        serializer = FirstStageSerializer(queryset, many=True)
         return Response(serializer.data)

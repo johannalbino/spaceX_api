@@ -1,20 +1,20 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import Launches
-from .serializer import LaunchesSerializer
+from core.models import Links
+from .serializer import LinksSerializer
 
 
-class LaunchesViewSet(viewsets.ModelViewSet):
+class LinksViewSet(viewsets.ModelViewSet):
     """
         A simple ViewSet for viewing and editing.
     """
 
-    queryset = Launches.objects.all()
-    serializer_class = LaunchesSerializer
+    queryset = Links.objects.all()
+    serializer_class = LinksSerializer
 
     def get_queryset(self):
-        return Launches.objects.all()
+        return Links.objects.all()
 
     def list(self, request, *args, **kwargs):
         """
@@ -24,6 +24,6 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = Launches.objects.all()
-        serializer = LaunchesSerializer(queryset, many=True)
+        queryset = Links.objects.all()
+        serializer = LinksSerializer(queryset, many=True)
         return Response(serializer.data)

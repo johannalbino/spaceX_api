@@ -1,20 +1,20 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import Launches
-from .serializer import LaunchesSerializer
+from core.models import Timeline
+from .serializer import TimelineSerializer
 
 
-class LaunchesViewSet(viewsets.ModelViewSet):
+class TimelineViewSet(viewsets.ModelViewSet):
     """
         A simple ViewSet for viewing and editing.
     """
 
-    queryset = Launches.objects.all()
-    serializer_class = LaunchesSerializer
+    queryset = Timeline.objects.all()
+    serializer_class = TimelineSerializer
 
     def get_queryset(self):
-        return Launches.objects.all()
+        return Timeline.objects.all()
 
     def list(self, request, *args, **kwargs):
         """
@@ -24,6 +24,6 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = Launches.objects.all()
-        serializer = LaunchesSerializer(queryset, many=True)
+        queryset = Timeline.objects.all()
+        serializer = TimelineSerializer(queryset, many=True)
         return Response(serializer.data)
