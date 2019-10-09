@@ -23,3 +23,6 @@ class Timeline(models.Model):
     dragon_separation = models.IntegerField()
     dragon_solar_deploy = models.IntegerField()
     dragon_bay_door_deploy = models.IntegerField()
+
+    def __str__(self):
+        return str(self.webcast_liftoff)

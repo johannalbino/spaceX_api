@@ -15,6 +15,12 @@ class Cores(models.Model):
     landing_type = models.CharField(max_length=100, blank=True, null=True)
     landing_vehicle = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.core_serial + ' ' + str(self.flight)
+
 
 class FirstStage(models.Model):
     cores = models.OneToOneField(Cores, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.cores)
