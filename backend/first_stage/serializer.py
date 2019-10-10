@@ -18,3 +18,19 @@ class FirstStageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FirstStage
         fields = ['cores']
+
+    def create_cores(self, cores, first_stage):
+        for cor in cores:
+            data_cor = Cores.objects.create(**cor)
+            first_stage.cores.add(data_cor)
+
+    def create(self, validated_data):
+        try:
+            _data_many = ['cores']
+            del validated_data[_data_many]
+            first_stage = FirstStage.objects.create(**validated_data)
+            self.create_cores(_data_many, first_stage)
+            return first_stage
+        except:
+            return False
+

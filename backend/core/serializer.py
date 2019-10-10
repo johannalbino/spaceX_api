@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Launches
+from first_stage.serializer import FirstStageSerializer
 from mission.serializer import MissionSerializer
 from rocket.serializer import RocketSerializer
 from ships.serializer import ShipsSerializer
@@ -19,12 +20,12 @@ from timeline.models import Timeline
 class LaunchesSerializer(ModelSerializer):
 
     mission_id = MissionSerializer(many=True)
-    rocket = RocketSerializer(many=False, read_only=True)
-    ships = ShipsSerializer(many=True, read_only=True)
-    telemetry = TelemetrySerializer(many=False, read_only=True)
+    rocket = RocketSerializer(many=False)
+    ships = ShipsSerializer(many=True)
+    telemetry = TelemetrySerializer(many=False)
     launch_site = LaunchSiteSerializer(many=False)
-    links = LinksSerializer(many=False, read_only=True)
-    timeline = TimelineSerializer(many=False, read_only=True)
+    links = LinksSerializer(many=False)
+    timeline = TimelineSerializer(many=False)
 
     class Meta:
         model = Launches
@@ -33,31 +34,50 @@ class LaunchesSerializer(ModelSerializer):
                   'ships', 'telemetry', 'launch_site', 'launch_success', 'links', 'details',
                   'upcoming', 'static_fire_date_utc', 'static_fire_date_unix', 'timeline', 'crew']
 
-    def create_relations_many_to_many(self, launche, *args, **kwargs):
-        models = [Mission]
-        campos_pk = [launche.mission_id]
+    def verify_relations_in_relations(self, data_validate):
+        verify = False
+        for _, value in data_validate.items():
+            try:
+                for _, value_items in value.items():
+                    verify = True
+            except AttributeError:
+                verify = False
+
+        if verify is True:
+            id_relation = FirstStageSerializer.create(data_validate)
+            return id_relation
+        return verify
+
+
+    def create_relations_many_to_many(self, launche, *args):
+        models = [Mission, Ships]
+        campos_pk = [launche.mission_id, launche.ships]
 
         relations = list(zip(models, campos_pk, args[0]))
 
         if args.__len__() > 0:
             for rel in relations:
-                at = rel[0].objects.create(**rel[2][0])
-                rel[1].add(at)
-        elif kwargs.__len__() > 0:
-            pass
+                _relation_data = rel[0].objects.create(**rel[2][0])
+                rel[1].add(_relation_data)
 
-    def create_relations_one_to_one(self, launche, *args, **kwargs):
-        models = []
-        campos_pk = [launche.launch_site]
+    def create_relations_one_to_one(self, *args):
+        launche = Launches
+
+        models = [LaunchSite, Rocket, Telemetry, Links, Timeline]
+        campos_pk = [launche.launch_site, launche.rocket, launche.telemetry, launche.links, launche.timeline]
 
         relations = list(zip(models, campos_pk, args[0]))
 
         if args.__len__() > 0:
             for rel in relations:
-                at = rel[0].objects.create(**rel[2])
-                rel[1] = at
-        elif kwargs.__len__() > 0:
-            pass
+                rel_list = list(rel)
+                verify_relations = self.verify_relations_in_relations(rel[2])
+                if verify_relations is False:
+                    _relation_data = rel_list[0].objects.create(**rel[2])
+                    rel_list[1] = _relation_data
+                else:
+                    rel_list[1] = verify_relations
+
 
     def create(self, validated_data):
 
@@ -66,8 +86,8 @@ class LaunchesSerializer(ModelSerializer):
 
         launche = Launches
 
-        _field_many_to_many = ['mission_id']
-        _field_one_to_one = ['launch_site']
+        _field_many_to_many = ['mission_id', 'ships']
+        _field_one_to_one = ['launch_site', 'rocket', 'telemetry', 'links', 'timeline']
 
         for many_to_many in _field_many_to_many:
             _data_many.append(validated_data[many_to_many])
@@ -77,8 +97,8 @@ class LaunchesSerializer(ModelSerializer):
             for one_to_one in _field_one_to_one:
                 _data_one.append(validated_data[one_to_one])
                 del validated_data[one_to_one]
-            self.launche = Launches.objects.create(**validated_data)
-            self.create_relations_one_to_one(self.launche, _data_one)
+            launche = Launches.objects.create(**validated_data)
+            self.create_relations_one_to_one(_data_one)
 
         elif _field_one_to_one.__len__() is 1:
 
@@ -86,8 +106,8 @@ class LaunchesSerializer(ModelSerializer):
             del validated_data[str(_field_one_to_one[0])]
 
             self.launche = Launches.objects.create(**validated_data)
-            at = LaunchSite.objects.create(**_one_field)
-            launche.launch_site = at
+            _relation_data = LaunchSite.objects.create(**_one_field)
+            launche.launch_site = _relation_data
 
         launche = Launches.objects.create(**validated_data)
         self.create_relations_many_to_many(launche, _data_many)
