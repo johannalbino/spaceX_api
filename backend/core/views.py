@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .uteis import ConsumptionApi
 from .models import Launches
-from .serializer import LaunchesSerializer, CreateLaunchesSerializer
+from .serializer import LaunchesSerializer
 
 
 class LaunchesViewSet(viewsets.ModelViewSet):
@@ -10,7 +10,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         A simple ViewSet for viewing and editing.
     """
     queryset = Launches.objects.all()
-    serializer_class = CreateLaunchesSerializer
+    serializer_class = LaunchesSerializer
 
     def list(self, request, *args, **kwargs):
         """
@@ -26,17 +26,17 @@ class LaunchesViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
 
-        try:
-            consumption = ConsumptionApi.ConsumptionAPI()
-            data_req = consumption.search_all()
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        #try:
+        #consumption = ConsumptionApi.ConsumptionAPI()
+        #data_req = consumption.search_all()
+        serializer = LaunchesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-        except:
-            return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #except:
+            #return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def perform_create(self, serializer):
         serializer.save()

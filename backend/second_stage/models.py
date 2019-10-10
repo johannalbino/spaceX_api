@@ -40,7 +40,7 @@ class Norad(models.Model):
 
 class Payloads(models.Model):
     payload_id = models.CharField(max_length=100)
-    norad_id = models.ManyToManyField(Norad, blank=True, null=True)
+    norad_id = models.ManyToManyField(Norad, blank=True)
     cap_serial = models.CharField(max_length=50, blank=True, null=True)
     reused = models.BooleanField()
     customers = models.ManyToManyField(Customers)
