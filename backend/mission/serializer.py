@@ -6,4 +6,4 @@ class MissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Mission
-        fields = ('__all__')
+        fields = ['mission_id']

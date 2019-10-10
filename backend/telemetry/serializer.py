@@ -6,4 +6,4 @@ class TelemetrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Telemetry
-        fields = ('__all__')
+        fields = ['flight_club']

@@ -6,4 +6,4 @@ class ShipsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ships
-        fields = ('__all__')
+        fields = ['ships']

@@ -4,10 +4,10 @@ from django.db import models
 
 
 class Fairings(models.Model):
-    reused = models.BooleanField()
-    recovery_attempt = models.BooleanField()
-    recovered = models.BooleanField()
-    ship = models.CharField(max_length=50)
+    reused = models.BooleanField(blank=True, null=True)
+    recovery_attempt = models.BooleanField(blank=True, null=True)
+    recovered = models.BooleanField(blank=True, null=True)
+    ship = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return str(self.reused)

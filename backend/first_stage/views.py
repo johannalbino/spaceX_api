@@ -1,8 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-
+from .models import Cores
 from rocket.models import FirstStage
-from .serializer import FirstStageSerializer
+from .serializer import (FirstStageSerializer,
+                         CoresSerializer)
 
 
 class FirstStageViewSet(viewsets.ModelViewSet):
@@ -27,3 +28,8 @@ class FirstStageViewSet(viewsets.ModelViewSet):
         queryset = FirstStage.objects.all()
         serializer = FirstStageSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class CoresViewSet(viewsets.ModelViewSet):
+    queryset = Cores.objects.all()
+    serializer_class = CoresSerializer

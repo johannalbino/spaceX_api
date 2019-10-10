@@ -20,7 +20,7 @@ class Cores(models.Model):
 
 
 class FirstStage(models.Model):
-    cores = models.OneToOneField(Cores, on_delete=models.PROTECT)
+    cores = models.ManyToManyField(Cores)
 
     def __str__(self):
         return str(self.cores)

@@ -25,22 +25,22 @@ class OrbitParams(models.Model):
 
 
 class Customers(models.Model):
-    customers_name = models.CharField(max_length=50)
+    customers = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.customers_name
+        return self.customers
 
 
 class Norad(models.Model):
-    norad_name = models.CharField(max_length=50)
+    norad_id = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.norad_name
+        return self.norad_id
 
 
 class Payloads(models.Model):
     payload_id = models.CharField(max_length=100)
-    norad_id = models.ManyToManyField(Norad)
+    norad_id = models.ManyToManyField(Norad, blank=True, null=True)
     cap_serial = models.CharField(max_length=50, blank=True, null=True)
     reused = models.BooleanField()
     customers = models.ManyToManyField(Customers)
@@ -63,7 +63,7 @@ class Payloads(models.Model):
 
 class SecondStage(models.Model):
     block = models.IntegerField()
-    payloads = models.OneToOneField(Payloads, on_delete=models.PROTECT)
+    payloads = models.ManyToManyField(Payloads)
 
     def __str__(self):
         return str(self.block)
