@@ -1,6 +1,5 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Launches
-from first_stage.serializer import FirstStageSerializer
 from mission.serializer import MissionSerializer
 from rocket.serializer import RocketSerializer
 from ships.serializer import ShipsSerializer
@@ -36,16 +35,18 @@ class LaunchesSerializer(ModelSerializer):
 
     def verify_relations_in_relations(self, data_validate):
         verify = False
+        validated_data = []
         for _, value in data_validate.items():
             try:
                 for _, value_items in value.items():
                     verify = True
+                validated_data.append(value)
             except AttributeError:
                 verify = False
 
         if verify is True:
-            id_relation = FirstStageSerializer.create(data_validate)
-            return id_relation
+            id_relation_rocket = RocketSerializer().create(data_validate)
+            return id_relation_rocket
         return verify
 
 
@@ -77,7 +78,6 @@ class LaunchesSerializer(ModelSerializer):
                     rel_list[1] = _relation_data
                 else:
                     rel_list[1] = verify_relations
-
 
     def create(self, validated_data):
 
@@ -111,5 +111,6 @@ class LaunchesSerializer(ModelSerializer):
 
         launche = Launches.objects.create(**validated_data)
         self.create_relations_many_to_many(launche, _data_many)
+        launche.save()
 
         return launche

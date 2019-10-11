@@ -19,18 +19,23 @@ class FirstStageSerializer(serializers.ModelSerializer):
         model = FirstStage
         fields = ['cores']
 
-    def create_cores(self, cores, first_stage):
-        for cor in cores:
-            data_cor = Cores.objects.create(**cor)
-            first_stage.cores.add(data_cor)
+    def create_relations_many_to_many(self, first_stage, *args):
+        models = [Cores]
+        fields_pk = [first_stage.cores]
+
+        relations = list(zip(models, fields_pk, args[0]))
+
+        if args.__len__() > 0:
+            for rel in relations:
+                _relation_data = rel[0].objects.create(**rel[2])
+                rel[1].add(_relation_data)
 
     def create(self, validated_data):
         try:
-            _data_many = ['cores']
-            del validated_data[_data_many]
-            first_stage = FirstStage.objects.create(**validated_data)
-            self.create_cores(_data_many, first_stage)
+            _data_many = validated_data['cores']
+            first_stage = FirstStage.objects.create()
+            self.create_relations_many_to_many(first_stage, _data_many)
             return first_stage
         except:
-            return False
+           return False
 

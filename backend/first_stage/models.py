@@ -20,7 +20,4 @@ class Cores(models.Model):
 
 
 class FirstStage(models.Model):
-    cores = models.ManyToManyField(Cores)
-
-    def __str__(self):
-        return str(self.cores)
+    cores = models.ManyToManyField(Cores, blank=True)

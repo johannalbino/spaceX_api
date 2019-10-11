@@ -33,7 +33,7 @@ class Launches(models.Model):
     upcoming = models.BooleanField()
     static_fire_date_utc = models.DateTimeField()
     static_fire_date_unix = models.IntegerField()
-    timeline = models.ForeignKey(Timeline, on_delete=models.CASCADE, blank=True, null=True)
+    timeline = models.ForeignKey(Timeline, on_delete=models.PROTECT, blank=True, null=True)
     crew = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
