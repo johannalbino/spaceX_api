@@ -10,7 +10,7 @@ class Rocket(models.Model):
     rocket_my_id = models.CharField(max_length=50)
     rocket_name = models.CharField(max_length=50)
     rocket_type = models.CharField(max_length=30)
-    first_stage = models.ForeignKey(FirstStage, on_delete=models.PROTECT)
+    first_stage = models.ForeignKey(FirstStage, on_delete=models.PROTECT, blank=True, null=True)
     second_stage = models.ForeignKey(SecondStage, on_delete=models.PROTECT, blank=True, null=True)
     fairings = models.ForeignKey(Fairings, on_delete=models.PROTECT, blank=True, null=True)
 
