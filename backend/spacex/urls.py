@@ -27,13 +27,13 @@ from timeline.views import TimelineViewSet
 
 router = routers.DefaultRouter()
 router.register(r'launches', LaunchesViewSet)
-router.register(r'mission', MissionViewSet)
-router.register(r'rocket', RocketViewSet)
-router.register(r'ships', ShipsViewSet)
-router.register(r'telemetry', TelemetryViewSet)
-router.register(r'launch_site', LaunchSiteViewSet)
-router.register(r'links', LinksViewSet)
-router.register(r'timeline', TimelineViewSet)
+#router.register(r'mission', MissionViewSet)
+#router.register(r'rocket', RocketViewSet)
+#router.register(r'ships', ShipsViewSet)
+#router.register(r'telemetry', TelemetryViewSet)
+#router.register(r'launch_site', LaunchSiteViewSet)
+#router.register(r'links', LinksViewSet)
+#router.register(r'timeline', TimelineViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
