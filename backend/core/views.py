@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-
+from .uteis import ConsumptionApi
 from .models import Launches
 from .serializer import LaunchesSerializer
 
@@ -9,12 +9,8 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     """
         A simple ViewSet for viewing and editing.
     """
-
     queryset = Launches.objects.all()
     serializer_class = LaunchesSerializer
-
-    def get_queryset(self):
-        return Launches.objects.all()
 
     def list(self, request, *args, **kwargs):
         """
@@ -27,3 +23,20 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         queryset = Launches.objects.all()
         serializer = LaunchesSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+
+        #try:
+        #consumption = ConsumptionApi.ConsumptionAPI()
+        #data_req = consumption.search_all()
+        serializer = LaunchesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        #except:
+            #return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def perform_create(self, serializer):
+        serializer.save()

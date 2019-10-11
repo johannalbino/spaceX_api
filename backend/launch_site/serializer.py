@@ -6,4 +6,5 @@ class LaunchSiteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LaunchSite
-        fields = ('__all__')
+        fields = ['site_id', 'site_name', 'site_name_long']
+

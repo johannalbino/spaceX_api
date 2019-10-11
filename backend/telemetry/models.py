@@ -4,4 +4,7 @@ from django.db import models
 
 
 class Telemetry(models.Model):
-    flight_club = models.CharField(max_length=50)
+    flight_club = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.flight_club

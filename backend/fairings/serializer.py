@@ -6,4 +6,4 @@ class FairingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Fairings
-        fields = ('__all__')
+        fields = ['reused', 'recovery_attempt', 'recovered', 'ship']
