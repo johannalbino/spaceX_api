@@ -22,15 +22,17 @@ O projeto é divido em dois diretórios:
 * Frontend (React)
 * Backend (Python/Django/RestFramework)
 
-As bibliotecas utilizadas se encontra na pasta de cada módulo:
+As bibliotecas utilizadas se encontram na pasta de cada módulo:
 * package.json - Bibliotecas do React
 * requirements.txt - Bibliotecas do Python
 
 
 Para instalar as bibliotecas do React é só digitar o comando no diretório frontend/spacex_app/:
+
     npm install
 
 Para instalar as bibliotecas do Python é só digitar o comando no diretório backend:
+
     pip install -r requirements.txt
 
 # Ferramentas utilizadas para o desenvolvimento:

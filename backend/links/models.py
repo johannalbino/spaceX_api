@@ -4,7 +4,7 @@ from django.db import models
 
 
 class FlickrImages(models.Model):
-    link_images = models.TextField(blank=True, null=True)
+    flickr_images = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.link_images

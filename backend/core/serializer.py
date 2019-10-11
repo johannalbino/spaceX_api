@@ -14,9 +14,12 @@ from telemetry.models import Telemetry
 from launch_site.models import LaunchSite
 from links.models import Links
 from timeline.models import Timeline
+from .uteis import ConsumptionApi
 
 
 class LaunchesSerializer(ModelSerializer):
+
+    consumption = ConsumptionApi.ConsumptionAPI()
 
     mission_id = MissionSerializer(many=True)
     rocket = RocketSerializer(many=False)
@@ -36,17 +39,22 @@ class LaunchesSerializer(ModelSerializer):
     def verify_relations_in_relations(self, data_validate, _serializers):
         verify = False
         validated_data = []
-        for _, value in data_validate.items():
-            try:
-                for _, value_items in value.items():
-                    verify = True
-                validated_data.append(value)
-            except AttributeError:
-                if type(value) is list:
-                    verify = True
-                else:
-                    verify = False
-                validated_data.append(value)
+        print(data_validate)
+
+        try:
+            for _, value in data_validate.items():
+                try:
+                    for _, value_items in value.items():
+                        verify = True
+                    validated_data.append(value)
+                except AttributeError:
+                    if type(value) is list:
+                        verify = True
+                    else:
+                        verify = False
+                    validated_data.append(value)
+        except Exception as e:
+            return False
 
         if verify is True:
             id_relation = _serializers().create(data_validate)
@@ -66,12 +74,18 @@ class LaunchesSerializer(ModelSerializer):
         if args.__len__() > 0:
             for rel in relations:
                 rel_list = list(rel)
-                verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
-                if verify_relations is False:
-                    _relation_data = rel_list[0].objects.create(**rel[2])
+
+                if rel[2] is None:
+                    _relation_data = rel_list[0].objects.create()
                     rel_list[1] = _relation_data
                 else:
-                    rel_list[1] = verify_relations
+                    verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
+
+                    if verify_relations is False:
+                        _relation_data = rel_list[0].objects.create(**rel[2])
+                        rel_list[1] = _relation_data
+                    else:
+                        rel_list[1] = verify_relations
 
     def create_mission(self, mission_id, launches):
         for mission in mission_id:
@@ -83,9 +97,18 @@ class LaunchesSerializer(ModelSerializer):
             _relation_data = Ships.objects.create(**shi)
             launches.ships.add(_relation_data)
 
+    def validated_content(self,contents):
+        valid = False
+
+        if contents is None:
+            valid = True
+        return valid
+
     def create(self, validated_data):
+        validated_data = self.consumption.search_all()
         _fields = ['mission_id', 'ships', 'launch_site', 'rocket', 'telemetry', 'links', 'timeline']
         _data = []
+        _data_serializer = []
 
         mission_id = validated_data['mission_id']
         ships = validated_data['ships']

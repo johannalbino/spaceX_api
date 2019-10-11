@@ -7,7 +7,7 @@ class FlickrImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FlickrImages
-        fields = ['link_images']
+        fields = ['flickr_images']
 
 
 class LinksSerializer(serializers.ModelSerializer):
@@ -19,9 +19,9 @@ class LinksSerializer(serializers.ModelSerializer):
         fields = ['mission_patch', 'mission_patch_small', 'reddit_campaign', 'reddit_launch', 'reddit_recovery',
                   'reddit_media', 'presskit', 'article_link', 'wikipedia', 'video_link', 'youtube_id', 'flickr_images']
 
-    def create_flickr(self, flickr, links):
-        for flic in flickr:
-            _relation_data = FlickrImages.objects.create(**flic)
+    def create_flickr(self, flickr_images, links):
+        for flickr in flickr_images:
+            _relation_data = FlickrImages.objects.create(**flickr)
             links.flickr_images.add(_relation_data)
 
     def create(self, validated_data):

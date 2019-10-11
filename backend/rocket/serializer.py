@@ -61,6 +61,7 @@ class RocketSerializer(serializers.ModelSerializer):
             _data_one = []
 
             _field_one_to_one = ['first_stage', 'second_stage', 'fairings']
+            del validated_data['rocket_id']
 
             for one_to_one in _field_one_to_one:
                 _data_one.append(validated_data[one_to_one])
@@ -69,6 +70,7 @@ class RocketSerializer(serializers.ModelSerializer):
             self.create_relations_one_to_one(_data_one)
 
             return rocket
-        except:
+        except Exception as e:
+            print(f'Erro no Rocket Serializer:\n{e}')
             return False
 
