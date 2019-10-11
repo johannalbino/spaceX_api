@@ -5,7 +5,7 @@ import requests
 class ConsumptionAPI(object):
 
     def __init__(self):
-        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/83/')
+        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/10')
         self.req = {}
 
     def create_order_dict(self, dic):
