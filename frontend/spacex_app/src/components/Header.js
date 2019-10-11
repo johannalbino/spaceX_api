@@ -34,8 +34,8 @@ const useStyles = makeStyles(theme => ({
 function Header() {
   const classes = useStyles();
   const itens = [
-    'LANÇAMENTOS',
-    'ULTIMOS LANÇAMENTOS'
+    {text: 'LANÇAMENTOS', path: '/lauches'},
+    {text: 'ULTIMOS LANÇAMENTOS', path: '/lastest_launche'}
   ];
   return (
     <div className={classes.root}>
@@ -45,9 +45,10 @@ function Header() {
           </div>
           <div className={classes.menu}>
             {itens.map((item, index) => (
-              <Link to="lauches">
+              <Link to={item.path}>
+                {console.log(item)}
                 <Button color="primary" key={index}>
-                  {item}
+                  {item.text}
                 </Button>
               </Link>
             ))}
