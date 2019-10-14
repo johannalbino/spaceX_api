@@ -62,8 +62,7 @@ class LaunchesSerializer(ModelSerializer):
             return id_relation
         return False
 
-    def create_relations_one_to_one(self, *args):
-        launche = Launches
+    def create_relations_one_to_one(self, launche, *args):
 
         models = [LaunchSite, Rocket, Telemetry, Links, Timeline]
         campos_pk = [launche.launch_site, launche.rocket, launche.telemetry, launche.links, launche.timeline]
@@ -95,7 +94,10 @@ class LaunchesSerializer(ModelSerializer):
 
         if args.__len__() > 0:
             for rel in relations:
-                at = rel[0].objects.create(**rel[2][0])
+                if rel[2].__len__() == 0:
+                    at = rel[0].objects.create()
+                else:
+                    at = rel[0].objects.create(**rel[2][0])
                 rel[1].add(at)
 
     def validated_content(self, contents):
@@ -125,7 +127,7 @@ class LaunchesSerializer(ModelSerializer):
                 del validated_data[one_to_one]
 
             launches = Launches.objects.create(**validated_data)
-            self.create_relations_one_to_one(_data_one)
+            self.create_relations_one_to_one(launches, _data_one)
             launches.save()
         """
         else:

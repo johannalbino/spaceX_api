@@ -48,12 +48,16 @@ class RocketSerializer(serializers.ModelSerializer):
         if args.__len__() > 0:
             for rel in relations:
                 rel_list = list(rel)
-                verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
-                if verify_relations is False:
-                    _relation_data = rel_list[0].objects.create(**rel[2])
+                if rel[2] is None:
+                    _relation_data = rel_list[0].objects.create()
                     rel_list[1] = _relation_data
                 else:
-                    rel_list[1] = verify_relations
+                    verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
+                    if verify_relations is False:
+                        _relation_data = rel_list[0].objects.create(**rel[2])
+                        rel_list[1] = _relation_data
+                    else:
+                        rel_list[1] = verify_relations
 
     def create(self, validated_data):
         try:
