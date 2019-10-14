@@ -7,7 +7,7 @@ from fairings.models import Fairings
 
 
 class Rocket(models.Model):
-    rocket_my_id = models.CharField(max_length=50, blank=True, null=True)
+    rocket_id = models.CharField(max_length=50, blank=True, null=True)
     rocket_name = models.CharField(max_length=50, blank=True, null=True)
     rocket_type = models.CharField(max_length=30, blank=True, null=True)
     first_stage = models.ForeignKey(FirstStage, on_delete=models.PROTECT, blank=True, null=True)
@@ -15,4 +15,4 @@ class Rocket(models.Model):
     fairings = models.ForeignKey(Fairings, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self):
-        return self.rocket_my_id + ' ' + self.rocket_name
+        return self.rocket_id + ' ' + self.rocket_name

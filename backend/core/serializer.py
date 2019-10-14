@@ -37,7 +37,7 @@ class LaunchesSerializer(ModelSerializer):
                   'upcoming', 'static_fire_date_utc', 'static_fire_date_unix', 'timeline', 'crew']
 
     def verify_relations_in_relations(self, data_validate, _serializers):
-        verify = False
+        verify = []
         validated_data = []
         print(data_validate)
 
@@ -45,22 +45,22 @@ class LaunchesSerializer(ModelSerializer):
             for _, value in data_validate.items():
                 try:
                     for _, value_items in value.items():
-                        verify = True
+                        verify.append(True)
                     validated_data.append(value)
                 except AttributeError:
                     if type(value) is list:
-                        verify = True
+                        verify.append(True)
                     else:
-                        verify = False
+                        verify.append(False)
                     validated_data.append(value)
         except Exception as e:
             return False
 
-        if verify is True:
+        if True in verify:
             id_relation = _serializers().create(data_validate)
             id_relation.save()
             return id_relation
-        return verify
+        return False
 
     def create_relations_one_to_one(self, *args):
         launche = Launches
@@ -87,17 +87,18 @@ class LaunchesSerializer(ModelSerializer):
                     else:
                         rel_list[1] = verify_relations
 
-    def create_mission(self, mission_id, launches):
-        for mission in mission_id:
-            _relation_data = Mission.objects.create(**mission)
-            launches.mission_id.add(_relation_data)
+    def create_relations_many_to_many(self, launches, *args, **kwargs):
+        models = [Mission, Ships]
+        campos_pk = [launches.mission_id, launches.ships]
 
-    def create_ships(self, ships, launches):
-        for shi in ships:
-            _relation_data = Ships.objects.create(**shi)
-            launches.ships.add(_relation_data)
+        relations = list(zip(models, campos_pk, args[0]))
 
-    def validated_content(self,contents):
+        if args.__len__() > 0:
+            for rel in relations:
+                at = rel[0].objects.create(**rel[2][0])
+                rel[1].add(at)
+
+    def validated_content(self, contents):
         valid = False
 
         if contents is None:
@@ -106,32 +107,37 @@ class LaunchesSerializer(ModelSerializer):
 
     def create(self, validated_data):
         validated_data = self.consumption.search_all()
-        _fields = ['mission_id', 'ships', 'launch_site', 'rocket', 'telemetry', 'links', 'timeline']
-        _data = []
-        _data_serializer = []
+        _fields_many_to_many = ['mission_id', 'ships']
+        _fields_one_to_one = ['launch_site', 'rocket', 'telemetry', 'links', 'timeline']
 
-        mission_id = validated_data['mission_id']
-        ships = validated_data['ships']
-        launch_site = validated_data['launch_site']
-        _data.append(launch_site)
-        rocket = validated_data['rocket']
-        _data.append(rocket)
-        telemetry = validated_data['telemetry']
-        _data.append(telemetry)
-        links = validated_data['links']
-        _data.append(links)
-        timeline = validated_data['timeline']
-        _data.append(timeline)
+        launches = Launches
 
-        for remove_fields in _fields:
-            del validated_data[remove_fields]
+        _data_many = []
+        _data_one = []
 
-        self.create_relations_one_to_one(_data)
+        for many_to_many in _fields_many_to_many:
+            _data_many.append(validated_data[many_to_many])
+            del validated_data[many_to_many]
 
+        if _fields_one_to_one.__len__() > 1:
+            for one_to_one in _fields_one_to_one:
+                _data_one.append(validated_data[one_to_one])
+                del validated_data[one_to_one]
+
+            launches = Launches.objects.create(**validated_data)
+            self.create_relations_one_to_one(_data_one)
+            launches.save()
+        """
+        else:
+            _field_one = validated_data[str(_fields_one_to_one[0])]
+            del validated_data[str(_fields_one_to_one[0])]
+            one_to_one_model_field = ModelFieldOne.objects.create(**_field_one)
+            launches = launches.objects.create(**validated_data)
+            launches._field_one = one_to_one_model_field
+            launches.save()
+        """
+
+        self.create_relations_many_to_many(launches, _data_many)
         launches = Launches.objects.create(**validated_data)
 
-        self.create_mission(mission_id, launches)
-        self.create_ships(ships, launches)
-
-        launches.save()
         return launches

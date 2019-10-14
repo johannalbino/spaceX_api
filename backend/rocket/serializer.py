@@ -8,7 +8,6 @@ from second_stage.serializer import SecondStageSerializer
 from fairings.serializer import FairingsSerializer
 
 
-
 class RocketSerializer(serializers.ModelSerializer):
     first_stage = FirstStageSerializer(many=False)
     second_stage = SecondStageSerializer(many=False)
@@ -16,7 +15,7 @@ class RocketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rocket
-        fields = ['rocket_my_id', 'rocket_name', 'rocket_type', 'first_stage', 'second_stage', 'fairings']
+        fields = ['rocket_id', 'rocket_name', 'rocket_type', 'first_stage', 'second_stage', 'fairings']
 
     def verify_relations_in_relations(self, data_validate, _serializers):
 
@@ -61,11 +60,11 @@ class RocketSerializer(serializers.ModelSerializer):
             _data_one = []
 
             _field_one_to_one = ['first_stage', 'second_stage', 'fairings']
-            del validated_data['rocket_id']
 
             for one_to_one in _field_one_to_one:
                 _data_one.append(validated_data[one_to_one])
                 del validated_data[one_to_one]
+
             rocket = Rocket.objects.create(**validated_data)
             self.create_relations_one_to_one(_data_one)
 
