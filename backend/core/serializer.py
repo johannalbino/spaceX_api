@@ -31,7 +31,7 @@ class LaunchesSerializer(ModelSerializer):
 
     class Meta:
         model = Launches
-        fields = ['flight_number', 'mission_name', 'mission_id', 'launch_year', 'launch_date_unix', 'launch_date_utc',
+        fields = ['id', 'flight_number', 'mission_name', 'mission_id', 'launch_year', 'launch_date_unix', 'launch_date_utc',
                   'launch_date_local', 'is_tentative', 'tentative_max_precision', 'tbd', 'launch_window', 'rocket',
                   'ships', 'telemetry', 'launch_site', 'launch_success', 'links', 'details',
                   'upcoming', 'static_fire_date_utc', 'static_fire_date_unix', 'timeline', 'crew']
