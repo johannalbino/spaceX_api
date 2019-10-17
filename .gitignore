@@ -4,4 +4,4 @@ migrations
 .idea
 .vscode
 node_modules
-db.sqlite3
+*.sqlite3
