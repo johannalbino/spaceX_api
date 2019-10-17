@@ -5,7 +5,7 @@ import requests
 class ConsumptionAPI(object):
 
     def __init__(self):
-        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/81/')
+        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/7/')
         self.req = {}
 
     def create_order_dict(self, dic):
@@ -60,19 +60,27 @@ class ConsumptionAPI(object):
 
     def search_all(self):
         req_api_all = self.req_api
-        req_api_json = req_api_all.json()
+        req_api_json = [req_api_all.json()]
+        list_req_api = []
 
-        teste = self.removing_special_characters(req_api_json)
+        for req_api in req_api_json:
 
-        for a, b in req_api_json.items():
-            if type(b) is dict:
-                b = self.create_order_dict(b)
-                self.req.update({str(a): b})
-            elif type(b) is list:
-                b = self.create_list_order_dict(a, b)
-                self.req.update({str(a): b})
-            else:
-                self.req.update({str(a): b})
+            for a, b in req_api.items():
+                if a == 'launch_failure_details':
+                    field_exclusive = False
+                    break
+                field_exclusive = True
+            if field_exclusive:
+                req_api.update({'launch_failure_details': None})
 
-
-        return dict(self.req)
+            for a, b in req_api.items():
+                if type(b) is dict:
+                    b = self.create_order_dict(b)
+                    self.req.update({str(a): b})
+                elif type(b) is list:
+                    b = self.create_list_order_dict(a, b)
+                    self.req.update({str(a): b})
+                else:
+                    self.req.update({str(a): b})
+            list_req_api.append(dict(self.req))
+        return list_req_api

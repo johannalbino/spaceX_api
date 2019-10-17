@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Launches
+from .models import Launches, LaunchFailureDetails
 from mission.serializer import MissionSerializer
 from rocket.serializer import RocketSerializer
 from ships.serializer import ShipsSerializer
@@ -17,6 +17,12 @@ from timeline.models import Timeline
 from .uteis import ConsumptionApi
 
 
+class LaunchFailureDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = LaunchFailureDetails
+        fields = ['time', 'altitude', 'reason']
+
+
 class LaunchesSerializer(ModelSerializer):
 
     consumption = ConsumptionApi.ConsumptionAPI()
@@ -28,12 +34,13 @@ class LaunchesSerializer(ModelSerializer):
     launch_site = LaunchSiteSerializer(many=False)
     links = LinksSerializer(many=False)
     timeline = TimelineSerializer(many=False)
+    launch_failure_details = LaunchFailureDetailsSerializer(many=False)
 
     class Meta:
         model = Launches
         fields = ['id', 'flight_number', 'mission_name', 'mission_id', 'launch_year', 'launch_date_unix', 'launch_date_utc',
                   'launch_date_local', 'is_tentative', 'tentative_max_precision', 'tbd', 'launch_window', 'rocket',
-                  'ships', 'telemetry', 'launch_site', 'launch_success', 'links', 'details',
+                  'ships', 'telemetry', 'launch_site', 'launch_success', 'launch_failure_details', 'links', 'details',
                   'upcoming', 'static_fire_date_utc', 'static_fire_date_unix', 'timeline', 'crew']
 
     def verify_relations_in_relations(self, data_validate, _serializers):
@@ -67,12 +74,15 @@ class LaunchesSerializer(ModelSerializer):
         _data_one = []
 
         for one_to_one in _fields_one_to_one:
-            _data_one.append(args[0][one_to_one])
-            del args[0][one_to_one]
+            try:
+                _data_one.append(args[0][one_to_one])
+                del args[0][one_to_one]
+            except Exception as e:
+                _data_one.append(None)
 
-        models = [LaunchSite, Rocket, Telemetry, Links, Timeline]
-        campos_pk = [launche.launch_site, launche.rocket, launche.telemetry, launche.links, launche.timeline]
-        _serializers = [LaunchesSerializer, RocketSerializer, TelemetrySerializer, LinksSerializer, TimelineSerializer]
+        models = [LaunchSite, Rocket, Telemetry, Links, Timeline, LaunchFailureDetails]
+        campos_pk = [launche.launch_site, launche.rocket, launche.telemetry, launche.links, launche.timeline, launche.launch_failure_details]
+        _serializers = [LaunchesSerializer, RocketSerializer, TelemetrySerializer, LinksSerializer, TimelineSerializer, LaunchFailureDetailsSerializer]
 
         relations = list(zip(models, campos_pk, _data_one, _serializers, _fields_one_to_one))
         launche = Launches.objects.create(**args[0])
@@ -97,6 +107,8 @@ class LaunchesSerializer(ModelSerializer):
                             launche.links = _relation_data
                         elif rel[4] == 'timeline':
                             launche.timeline = _relation_data
+                        elif rel[4] == 'launch_failure_details':
+                            launche.launch_failure_details = _relation_data
                         launche.save()
                     else:
                         if rel[4] == 'launch_site':
@@ -109,6 +121,8 @@ class LaunchesSerializer(ModelSerializer):
                             launche.links = verify_relations
                         elif rel[4] == 'timeline':
                             launche.timeline = verify_relations
+                        elif rel[4] == 'launch_failure_details':
+                            launche.launch_failure_details = verify_relations
                         launche.save()
 
             return launche
@@ -135,9 +149,8 @@ class LaunchesSerializer(ModelSerializer):
         return valid
 
     def create(self, validated_data):
-        validated_data = self.consumption.search_all()
         _fields_many_to_many = ['mission_id', 'ships']
-        _fields_one_to_one = ['launch_site', 'rocket', 'telemetry', 'links', 'timeline']
+        _fields_one_to_one = ['launch_site', 'rocket', 'telemetry', 'links', 'timeline', 'launch_failure_details']
 
         launches = Launches
 

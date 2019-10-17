@@ -1,8 +1,13 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .uteis import ConsumptionApi
-from .models import Launches
-from .serializer import LaunchesSerializer
+from .models import Launches, LaunchFailureDetails
+from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer
+
+
+class LaunchFailureDetailsViewSet(viewsets.ModelViewSet):
+    queryset = LaunchFailureDetails.objects.all()
+    serializer_class = LaunchFailureDetailsSerializer
 
 
 class LaunchesViewSet(viewsets.ModelViewSet):
@@ -27,12 +32,13 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         try:
-            #consumption = ConsumptionApi.ConsumptionAPI()
-            #data_req = consumption.search_all()
-            serializer = LaunchesSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
+            consumption = ConsumptionApi.ConsumptionAPI()
+            data_req = consumption.search_all()
+            for data in data_req:
+                serializer = LaunchesSerializer().create(data)
+                #serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
         except:

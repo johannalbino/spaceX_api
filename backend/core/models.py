@@ -10,6 +10,11 @@ from timeline.models import Timeline
 
 # Create your models here.
 
+class LaunchFailureDetails(models.Model):
+    time = models.IntegerField(blank=True, null=True)
+    altitude = models.IntegerField(blank=True, null=True)
+    reason = models.TextField(blank=True, null=True)
+
 
 class Launches(models.Model):
     flight_number = models.IntegerField(blank=True, null=True)
@@ -28,6 +33,7 @@ class Launches(models.Model):
     telemetry = models.ForeignKey(Telemetry, on_delete=models.CASCADE, blank=True, null=True)
     launch_site = models.ForeignKey(LaunchSite, on_delete=models.CASCADE, blank=True, null=True)
     launch_success = models.BooleanField(blank=True, null=True)
+    launch_failure_details = models.ForeignKey(LaunchFailureDetails, on_delete=models.CASCADE, blank=True, null=True)
     links = models.ForeignKey(Links, on_delete=models.PROTECT, blank=True, null=True)
     details = models.TextField(blank=True, null=True)
     upcoming = models.BooleanField(blank=True, null=True)
