@@ -26,17 +26,22 @@ class LaunchesViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
 
-        #try:
-        #consumption = ConsumptionApi.ConsumptionAPI()
-        #data_req = consumption.search_all()
-        serializer = LaunchesSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        try:
+            #consumption = ConsumptionApi.ConsumptionAPI()
+            #data_req = consumption.search_all()
+            serializer = LaunchesSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-        #except:
-            #return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except:
+            return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def perform_create(self, serializer):
         serializer.save()
+
+    def destroy(self, request, *args, **kwargs):
+        queryset = Launches.objects.all().delete()
+        serializer = LaunchesSerializer(queryset, many=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)

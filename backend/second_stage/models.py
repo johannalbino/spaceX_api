@@ -39,23 +39,23 @@ class Norad(models.Model):
 
 
 class Payloads(models.Model):
-    payload_id = models.CharField(max_length=100)
+    payload_id = models.CharField(max_length=100, blank=True, null=True)
     norad_id = models.ManyToManyField(Norad, blank=True)
     cap_serial = models.CharField(max_length=50, blank=True, null=True)
-    reused = models.BooleanField()
+    reused = models.BooleanField(blank=True, null=True)
     customers = models.ManyToManyField(Customers, blank=True)
-    nationality = models.CharField(max_length=100)
-    manufacturer = models.CharField(max_length=100)
-    payload_type = models.CharField(max_length=100)
-    payload_mass_kg = models.IntegerField()
-    payload_mass_lbs = models.DecimalField(max_digits=12, decimal_places=2)
-    orbit = models.CharField(max_length=30)
+    nationality = models.CharField(max_length=100, blank=True, null=True)
+    manufacturer = models.CharField(max_length=100, blank=True, null=True)
+    payload_type = models.CharField(max_length=100, blank=True, null=True)
+    payload_mass_kg = models.IntegerField(blank=True, null=True)
+    payload_mass_lbs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    orbit = models.CharField(max_length=30, blank=True, null=True)
     orbit_params = models.ForeignKey(OrbitParams, on_delete=models.PROTECT, blank=True, null=True)
     mass_returned_kg = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     mass_returned_lbs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     flight_time_sec = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     cargo_manifest = models.CharField(max_length=30, blank=True, null=True)
-    uid = models.CharField(max_length=30)
+    uid = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
         return self.payload_id
