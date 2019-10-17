@@ -5,7 +5,7 @@ import requests
 class ConsumptionAPI(object):
 
     def __init__(self):
-        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/10/')
+        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/81/')
         self.req = {}
 
     def create_order_dict(self, dic):
@@ -13,7 +13,7 @@ class ConsumptionAPI(object):
         _field_images = OrderedDict()
         _list_field = []
         for a, b in dic.items():
-            if type(b) is not dict and list:
+            if list is not type(b) is not dict:
                 if 'flickr_images' in a:
                     for c in b:
                         _field_images[a] = c
@@ -24,7 +24,7 @@ class ConsumptionAPI(object):
             elif type(b) is dict:
                 _field[a] = self.create_order_dict(b)
             else:
-                _field[a] = self.create_order_dict(b)
+                _field[a] = self.create_list_order_dict(a, b)
         return _field
 
     def create_list_order_dict(self, key, lis):

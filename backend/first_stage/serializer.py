@@ -27,15 +27,25 @@ class FirstStageSerializer(serializers.ModelSerializer):
 
         if args.__len__() > 0:
             for rel in relations:
-                _relation_data = rel[0].objects.create(**rel[2])
-                rel[1].add(_relation_data)
+                if rel[2].__len__() == 0:
+                    at = rel[0].objects.create()
+                else:
+                    at = rel[0].objects.create(**rel[2])
+                rel[1].add(at)
 
     def create(self, validated_data):
         try:
             _data_many = validated_data['cores']
-            first_stage = FirstStage.objects.create()
-            self.create_relations_many_to_many(first_stage, _data_many)
+            del validated_data['cores']
+            first_stage = FirstStage.objects.create(**validated_data)
+
+            if _data_many.__len__() <= 1:
+                data = Cores.objects.create(**_data_many[0])
+                first_stage.cores.add(data)
+            else:
+                self.create_relations_many_to_many(first_stage, _data_many)
             return first_stage
-        except:
+
+        except Exception as e:
            return False
 

@@ -36,14 +36,21 @@ class RocketSerializer(serializers.ModelSerializer):
             return id_relation
         return verify
 
-    def create_relations_one_to_one(self, *args):
+    def create_relations_one_to_one(self, _field_one_to_one, *args):
         rocket = Rocket
+        _data_one = []
+
+        for one_to_one in _field_one_to_one:
+            _data_one.append(args[0][one_to_one])
+            del args[0][one_to_one]
 
         _serializers = [FirstStageSerializer, SecondStageSerializer, FairingsSerializer]
         models = [FirstStage, SecondStage, Fairings]
         campos_pk = [rocket.first_stage, rocket.second_stage, rocket.fairings]
 
-        relations = list(zip(models, campos_pk, args[0], _serializers))
+        relations = list(zip(models, campos_pk, _data_one, _serializers, _field_one_to_one))
+
+        rocket = Rocket.objects.create(**args[0])
 
         if args.__len__() > 0:
             for rel in relations:
@@ -55,23 +62,27 @@ class RocketSerializer(serializers.ModelSerializer):
                     verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
                     if verify_relations is False:
                         _relation_data = rel_list[0].objects.create(**rel[2])
-                        rel_list[1] = _relation_data
+                        if rel[4] == 'first_stage':
+                            rocket.first_stage = _relation_data
+                        elif rel[4] == 'second_stage':
+                            rocket.second_stage = _relation_data
+                        elif rel[4] == 'fairings':
+                            rocket.fairings = _relation_data
+                        rocket.save()
                     else:
-                        rel_list[1] = verify_relations
+                        if rel[4] == 'first_stage':
+                            rocket.first_stage = verify_relations
+                        elif rel[4] == 'second_stage':
+                            rocket.second_stage = verify_relations
+                        elif rel[4] == 'fairings':
+                            rocket.fairings = verify_relations
+                        rocket.save()
+            return rocket
 
     def create(self, validated_data):
         try:
-            _data_one = []
-
             _field_one_to_one = ['first_stage', 'second_stage', 'fairings']
-
-            for one_to_one in _field_one_to_one:
-                _data_one.append(validated_data[one_to_one])
-                del validated_data[one_to_one]
-
-            rocket = Rocket.objects.create(**validated_data)
-            self.create_relations_one_to_one(_data_one)
-
+            rocket = self.create_relations_one_to_one(_field_one_to_one, validated_data)
             return rocket
         except Exception as e:
             print(f'Erro no Rocket Serializer:\n{e}')

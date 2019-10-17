@@ -42,6 +42,6 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+        queryset = Launches.objects.all().delete()
+        serializer = LaunchesSerializer(queryset, many=True)
         return Response(status=status.HTTP_204_NO_CONTENT)
