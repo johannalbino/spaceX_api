@@ -10,6 +10,11 @@ from timeline.models import Timeline
 
 # Create your models here.
 
+class LaunchFailureDetails(models.Model):
+    time = models.IntegerField(blank=True, null=True)
+    altitude = models.IntegerField(blank=True, null=True)
+    reason = models.TextField(blank=True, null=True)
+
 
 class Launches(models.Model):
     flight_number = models.IntegerField(blank=True, null=True)
@@ -28,6 +33,7 @@ class Launches(models.Model):
     telemetry = models.ForeignKey(Telemetry, on_delete=models.CASCADE, blank=True, null=True)
     launch_site = models.ForeignKey(LaunchSite, on_delete=models.CASCADE, blank=True, null=True)
     launch_success = models.BooleanField(blank=True, null=True)
+    launch_failure_details = models.ForeignKey(LaunchFailureDetails, on_delete=models.CASCADE, blank=True, null=True)
     links = models.ForeignKey(Links, on_delete=models.PROTECT, blank=True, null=True)
     details = models.TextField(blank=True, null=True)
     upcoming = models.BooleanField(blank=True, null=True)
@@ -35,6 +41,14 @@ class Launches(models.Model):
     static_fire_date_unix = models.IntegerField(blank=True, null=True)
     timeline = models.ForeignKey(Timeline, on_delete=models.PROTECT, blank=True, null=True)
     crew = models.CharField(max_length=50, blank=True, null=True)
+    last_date_update = models.DateTimeField(blank=True, null=True)
+    last_ll_launch_date = models.DateTimeField(blank=True, null=True)
+    last_ll_update = models.DateTimeField(blank=True, null=True)
+    last_wiki_launch_date = models.DateTimeField(blank=True, null=True)
+    last_wiki_revision = models.CharField(max_length=100, null=True, blank=True)
+    last_wiki_update = models.DateTimeField(blank=True, null=True)
+    launch_date_source = models.CharField(max_length=100, null=True, blank=True)
+
 
     def __str__(self):
         return str(self.flight_number) + ' ' + self.mission_name

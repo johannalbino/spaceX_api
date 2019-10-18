@@ -5,7 +5,7 @@ import requests
 class ConsumptionAPI(object):
 
     def __init__(self):
-        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/81/')
+        self.req_api = requests.get('https://api.spacexdata.com/v3/launches/')
         self.req = {}
 
     def create_order_dict(self, dic):
@@ -44,35 +44,61 @@ class ConsumptionAPI(object):
 
         return _list_field
 
-    def removing_special_characters(self, data_dic):
+    @classmethod
+    def get_latest_launche(cls):
+        req_api = requests.get('https://api.spacexdata.com/v3/launches/latest?pretty=true')
+        info_latest_api = req_api.json()
+        flight_number = info_latest_api['flight_number']
+        return flight_number
 
-        for keys, value in data_dic.items():
-            if type(value) is dict:
-                for key, value_items in value.items():
-                    _split_field_key = key.split('-')
-                    if _split_field_key.__len__() > 1:
-                        _new_key = ''
-                        for i in _split_field_key:
-                            _new_key += str(i)
-                        value[_new_key] = value_items
-                        del value[key]
+    @classmethod
+    def removing_special_characters(cls, data_dic):
+
+        for key, value in data_dic.items():
+            _split_field_key = key.split('-')
+            if _split_field_key.__len__() > 1:
+                _new_key = ''
+                for i in _split_field_key:
+                    _new_key += str(i)
+                del data_dic[key]
+                data_dic.update({str(_new_key): value})
         return data_dic
 
     def search_all(self):
         req_api_all = self.req_api
         req_api_json = req_api_all.json()
+        list_req_api = []
 
-        teste = self.removing_special_characters(req_api_json)
+        for req_api in req_api_json:
+            try:
+                for a, b in req_api.items():
+                    if a == 'timeline':
+                        b_atual = ConsumptionAPI.removing_special_characters(req_api[a])
+                        del req_api[a]
+                        req_api.update({str(a): b_atual})
+                        break
+                    else:
+                        pass
+            except Exception as e:
+                #print(f'Erro ao tentar remover os caracteres especiais!')
+                pass
 
-        for a, b in req_api_json.items():
-            if type(b) is dict:
-                b = self.create_order_dict(b)
-                self.req.update({str(a): b})
-            elif type(b) is list:
-                b = self.create_list_order_dict(a, b)
-                self.req.update({str(a): b})
-            else:
-                self.req.update({str(a): b})
+            for a, b in req_api.items():
+                if a == 'launch_failure_details':
+                    field_exclusive = False
+                    break
+                field_exclusive = True
+            if field_exclusive:
+                req_api.update({'launch_failure_details': None})
 
-
-        return dict(self.req)
+            for a, b in req_api.items():
+                if type(b) is dict:
+                    b = self.create_order_dict(b)
+                    self.req.update({str(a): b})
+                elif type(b) is list:
+                    b = self.create_list_order_dict(a, b)
+                    self.req.update({str(a): b})
+                else:
+                    self.req.update({str(a): b})
+            list_req_api.append(dict(self.req))
+        return list_req_api

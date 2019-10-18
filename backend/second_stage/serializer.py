@@ -123,7 +123,11 @@ class PayloadsSerializer(serializers.ModelSerializer):
                     _payloads.orbit_params = _relation_data
                 except:
                     print('Erro ao salvar orbit_params\n')
-            self.create_relations_many_to_many(_payloads, _data_many)
+            try:
+                self.create_relations_many_to_many(_payloads, _data_many)
+            except:
+                print('Erro ao salvar norad_id ou customers!')
+
             _payloads.save()
             return _payloads
         except:

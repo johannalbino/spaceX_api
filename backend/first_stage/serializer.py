@@ -38,12 +38,14 @@ class FirstStageSerializer(serializers.ModelSerializer):
             _data_many = validated_data['cores']
             del validated_data['cores']
             first_stage = FirstStage.objects.create(**validated_data)
-
-            if _data_many.__len__() <= 1:
-                data = Cores.objects.create(**_data_many[0])
-                first_stage.cores.add(data)
-            else:
-                self.create_relations_many_to_many(first_stage, _data_many)
+            try:
+                if _data_many.__len__() <= 1:
+                    data = Cores.objects.create(**_data_many[0])
+                    first_stage.cores.add(data)
+                else:
+                    self.create_relations_many_to_many(first_stage, _data_many)
+            except Exception as e:
+                print('Erro ao tentar salvar first_stage.cores')
             return first_stage
 
         except Exception as e:
