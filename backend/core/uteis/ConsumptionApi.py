@@ -45,6 +45,13 @@ class ConsumptionAPI(object):
         return _list_field
 
     @classmethod
+    def get_latest_launche(cls):
+        req_api = requests.get('https://api.spacexdata.com/v3/launches/latest?pretty=true')
+        info_latest_api = req_api.json()
+        flight_number = info_latest_api['flight_number']
+        return flight_number
+
+    @classmethod
     def removing_special_characters(cls, data_dic):
 
         for key, value in data_dic.items():
@@ -73,7 +80,8 @@ class ConsumptionAPI(object):
                     else:
                         pass
             except Exception as e:
-                print(f'Erro ao tentar remover os caracteres especiais!')
+                #print(f'Erro ao tentar remover os caracteres especiais!')
+                pass
 
             for a, b in req_api.items():
                 if a == 'launch_failure_details':

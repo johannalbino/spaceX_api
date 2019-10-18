@@ -1,17 +1,32 @@
 # Desenvolvimento da SpaceX API com Python/Django e React
 
+![spacex_image](https://camo.githubusercontent.com/8caf62499f477b6bf0d3eaff109faff38d5a791e/68747470733a2f2f696d6775722e636f6d2f4a493650754b6c2e706e67)
+
 API em desenvolvimento
 
 Objetivo:
 Elaborar uma API em Python/Django que consuma a API da SpaceX API e seja capaz apresentar as seguintes informações:
-* Próximo Lançamento
-* Último Lançamento
-* Próximos Lançamentos
-* Lançamentos Passados
+
+	Próximo Lançamento
+	Último Lançamento
+	Próximos Lançamentos
+	Lançamentos Passados
 
 Além disso desenvolver o frontend em React que irá consumir a API criada e apresentar as informações acima.
 
 # Instruções:
+
+All Launches
+Com esse link você deleta tudo que está no banco de dados e consome a API da SpaceX novamente e armazena no banco de dados novamente:
+
+    POST http://localhost:8000/launches/latest_consumption/
+
+Latest Launche
+Verificar qual o ultimo lançamento
+
+    GET http://localhost:8000/launches/latest_consumption/
+
+**Método CREATE e UPDATE está desativada para está API.**
 
 Clonar repositório:
 

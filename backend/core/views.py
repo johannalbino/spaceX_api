@@ -17,6 +17,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     """
     queryset = Launches.objects.all()
     serializer_class = LaunchesSerializer
+    consumption = ConsumptionApi.ConsumptionAPI()
 
     def list(self, request, *args, **kwargs):
         """
@@ -33,8 +34,10 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def consumption_api(self, request):
         try:
-            consumption = ConsumptionApi.ConsumptionAPI()
-            data_req = consumption.search_all()
+            queryset = Launches.objects.all().delete()
+            serializer = LaunchesSerializer(queryset, many=True)
+
+            data_req = self.consumption.search_all()
             for data in data_req:
                 serializer = LaunchesSerializer().create(data)
                 self.perform_create(serializer)
@@ -45,10 +48,20 @@ class LaunchesViewSet(viewsets.ModelViewSet):
             print('Deu erro')
             return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=)
+    @action(methods=['get'], detail=False)
+    def latest_consumption(self, request):
+        id_flight_number = self.consumption.get_latest_launche()
+        queryset = Launches.objects.filter(flight_number=id_flight_number)
+        serializer = LaunchesSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        return Response({'msg': 'Opção CREATE não está disponível para esta API.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'msg': 'Opção CREATE não está disponível para esta API.'},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, *args, **kwargs):
+        return Response({'msg': 'Opção UPDATE não está disponível para esta API.'},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def perform_create(self, serializer):
         serializer.save()
