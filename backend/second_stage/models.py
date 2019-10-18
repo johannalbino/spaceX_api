@@ -4,8 +4,8 @@ from django.db import models
 
 
 class OrbitParams(models.Model):
-    reference_system = models.CharField(max_length=50)
-    regime = models.CharField(max_length=50)
+    reference_system = models.CharField(max_length=50, blank=True, null=True)
+    regime = models.CharField(max_length=50, blank=True, null=True)
     longitude = models.IntegerField(blank=True, null=True)
     semi_major_axis_km = models.DecimalField(max_digits=20, decimal_places=10, blank=True, null=True)
     eccentricity = models.DecimalField(max_digits=20, decimal_places=10, blank=True, null=True)
@@ -25,14 +25,14 @@ class OrbitParams(models.Model):
 
 
 class Customers(models.Model):
-    customers = models.CharField(max_length=50)
+    customers = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.customers
 
 
 class Norad(models.Model):
-    norad_id = models.CharField(max_length=50)
+    norad_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.norad_id
@@ -50,7 +50,7 @@ class Payloads(models.Model):
     payload_mass_kg = models.IntegerField(blank=True, null=True)
     payload_mass_lbs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     orbit = models.CharField(max_length=30, blank=True, null=True)
-    orbit_params = models.ForeignKey(OrbitParams, on_delete=models.PROTECT, blank=True, null=True)
+    orbit_params = models.ForeignKey(OrbitParams, on_delete=models.CASCADE, blank=True, null=True)
     mass_returned_kg = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     mass_returned_lbs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     flight_time_sec = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
@@ -62,5 +62,5 @@ class Payloads(models.Model):
 
 
 class SecondStage(models.Model):
-    block = models.IntegerField()
-    payloads = models.ManyToManyField(Payloads)
+    block = models.IntegerField(blank=True, null=True)
+    payloads = models.ManyToManyField(Payloads, blank=True)

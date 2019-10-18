@@ -41,6 +41,14 @@ class Launches(models.Model):
     static_fire_date_unix = models.IntegerField(blank=True, null=True)
     timeline = models.ForeignKey(Timeline, on_delete=models.PROTECT, blank=True, null=True)
     crew = models.CharField(max_length=50, blank=True, null=True)
+    last_date_update = models.DateTimeField(blank=True, null=True)
+    last_ll_launch_date = models.DateTimeField(blank=True, null=True)
+    last_ll_update = models.DateTimeField(blank=True, null=True)
+    last_wiki_launch_date = models.DateTimeField(blank=True, null=True)
+    last_wiki_revision = models.CharField(max_length=100, null=True, blank=True)
+    last_wiki_update = models.DateTimeField(blank=True, null=True)
+    launch_date_source = models.CharField(max_length=100, null=True, blank=True)
+
 
     def __str__(self):
         return str(self.flight_number) + ' ' + self.mission_name

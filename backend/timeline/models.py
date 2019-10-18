@@ -41,7 +41,12 @@ class Timeline(models.Model):
     dragon_bay_door_deploy = models.IntegerField(blank=True, null=True)
     first_stage_boostback_burn = models.IntegerField(blank=True, null=True)
     first_stage_entry_burn = models.IntegerField(blank=True, null=True)
+    first_stage_landing_burn = models.IntegerField(blank=True, null=True)
     first_stage_landing = models.IntegerField(blank=True, null=True)
+    webcast_launch = models.IntegerField(blank=True, null=True)
+    payload_deploy_1 = models.IntegerField(blank=True, null=True)
+    payload_deploy_2 = models.IntegerField(blank=True, null=True)
+    center_core_boostback = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return str(self.webcast_liftoff)

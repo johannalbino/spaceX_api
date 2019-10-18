@@ -36,12 +36,12 @@ class LaunchesViewSet(viewsets.ModelViewSet):
             data_req = consumption.search_all()
             for data in data_req:
                 serializer = LaunchesSerializer().create(data)
-                #serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response(status=status.HTTP_201_CREATED)
 
         except:
+            print('Deu erro')
             return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def perform_create(self, serializer):
