@@ -52,6 +52,13 @@ class ConsumptionAPI(object):
         return flight_number
 
     @classmethod
+    def get_next_launche(cls):
+        req_api = requests.get('https://api.spacexdata.com/v3/launches/next/')
+        info_latest_api = req_api.json()
+        flight_number = info_latest_api['flight_number']
+        return flight_number
+
+    @classmethod
     def removing_special_characters(cls, data_dic):
 
         for key, value in data_dic.items():
