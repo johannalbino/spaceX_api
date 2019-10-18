@@ -46,8 +46,7 @@ class LaunchesSerializer(ModelSerializer):
     def verify_relations_in_relations(self, data_validate, _serializers):
         verify = []
         validated_data = []
-        print(data_validate)
-
+        #print(data_validate)
         try:
             for _, value in data_validate.items():
                 try:
@@ -95,35 +94,38 @@ class LaunchesSerializer(ModelSerializer):
                     rel_list[1] = _relation_data
                 else:
                     verify_relations = self.verify_relations_in_relations(rel[2], rel[3])
-                    if verify_relations is False:
-                        _relation_data = rel_list[0].objects.create(**rel[2])
-                        if rel[4] == 'launch_site':
-                            launche.launch_site = _relation_data
-                        elif rel[4] == 'rocket':
-                            launche.rocket = _relation_data
-                        elif rel[4] == 'telemetry':
-                            launche.telemetry = _relation_data
-                        elif rel[4] == 'links':
-                            launche.links = _relation_data
-                        elif rel[4] == 'timeline':
-                            launche.timeline = _relation_data
-                        elif rel[4] == 'launch_failure_details':
-                            launche.launch_failure_details = _relation_data
-                        launche.save()
-                    else:
-                        if rel[4] == 'launch_site':
-                            launche.launch_site = verify_relations
-                        elif rel[4] == 'rocket':
-                            launche.rocket = verify_relations
-                        elif rel[4] == 'telemetry':
-                            launche.telemetry = verify_relations
-                        elif rel[4] == 'links':
-                            launche.links = verify_relations
-                        elif rel[4] == 'timeline':
-                            launche.timeline = verify_relations
-                        elif rel[4] == 'launch_failure_details':
-                            launche.launch_failure_details = verify_relations
-                        launche.save()
+                    try:
+                        if verify_relations is False:
+                            _relation_data = rel_list[0].objects.create(**rel[2])
+                            if rel[4] == 'launch_site':
+                                launche.launch_site = _relation_data
+                            elif rel[4] == 'rocket':
+                                launche.rocket = _relation_data
+                            elif rel[4] == 'telemetry':
+                                launche.telemetry = _relation_data
+                            elif rel[4] == 'links':
+                                launche.links = _relation_data
+                            elif rel[4] == 'timeline':
+                                launche.timeline = _relation_data
+                            elif rel[4] == 'launch_failure_details':
+                                launche.launch_failure_details = _relation_data
+                            launche.save()
+                        else:
+                            if rel[4] == 'launch_site':
+                                launche.launch_site = verify_relations
+                            elif rel[4] == 'rocket':
+                                launche.rocket = verify_relations
+                            elif rel[4] == 'telemetry':
+                                launche.telemetry = verify_relations
+                            elif rel[4] == 'links':
+                                launche.links = verify_relations
+                            elif rel[4] == 'timeline':
+                                launche.timeline = verify_relations
+                            elif rel[4] == 'launch_failure_details':
+                                launche.launch_failure_details = verify_relations
+                            launche.save()
+                    except Exception as e:
+                        print(f'Erro ao tentar salvar {str(rel[1])}')
 
             return launche
 
@@ -160,9 +162,15 @@ class LaunchesSerializer(ModelSerializer):
         for many_to_many in _fields_many_to_many:
             _data_many.append(validated_data[many_to_many])
             del validated_data[many_to_many]
+        try:
+            if _fields_one_to_one.__len__() > 1:
+                launches = self.create_relations_one_to_one(_fields_one_to_one, validated_data)
+        except Exception as e:
+            print(f'Erro ao tentar salvar {_fields_one_to_one}')
 
-        if _fields_one_to_one.__len__() > 1:
-            launches = self.create_relations_one_to_one(_fields_one_to_one, validated_data)
+        try:
+            self.create_relations_many_to_many(launches, _data_many)
+        except Exception as e:
+            print(f'Erro ao tentar salvar {_fields_many_to_many}')
 
-        self.create_relations_many_to_many(launches, _data_many)
         return launches

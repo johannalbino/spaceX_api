@@ -70,6 +70,8 @@ class ConsumptionAPI(object):
                         del req_api[a]
                         req_api.update({str(a): b_atual})
                         break
+                    else:
+                        pass
             except Exception as e:
                 print(f'Erro ao tentar remover os caracteres especiais!')
 

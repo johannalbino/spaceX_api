@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from .uteis import ConsumptionApi
 from .models import Launches, LaunchFailureDetails
@@ -29,8 +30,8 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         serializer = LaunchesSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-
+    @action(methods=['post'], detail=False)
+    def consumption_api(self, request):
         try:
             consumption = ConsumptionApi.ConsumptionAPI()
             data_req = consumption.search_all()
@@ -43,6 +44,11 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         except:
             print('Deu erro')
             return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=)
+
+    def create(self, request, *args, **kwargs):
+        return Response({'msg': 'Opção CREATE não está disponível para esta API.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def perform_create(self, serializer):
         serializer.save()
