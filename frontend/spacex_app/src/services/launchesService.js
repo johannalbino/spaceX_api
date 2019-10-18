@@ -11,3 +11,7 @@ export function getLatestLaunche(){
 export function updateLaunchesAPI(){
     return http.post('/launches/consumption_api/')
 }
+
+export function nextLaunche(){
+    return http.post('/launches/next_launche/')
+}

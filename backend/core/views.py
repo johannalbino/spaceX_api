@@ -56,7 +56,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(methods=['get'], detail=False)
-    def next_laucnhe(self, request):
+    def next_launche(self, request):
         id_flight_number = self.consumption.get_next_launche()
         queryset = Launches.objects.filter(flight_number=id_flight_number)
         serializer = LaunchesSerializer(queryset, many=True)

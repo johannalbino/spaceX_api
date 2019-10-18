@@ -27,6 +27,11 @@ Verificar qual o ultimo lançamento
 
     GET http://localhost:8000/launches/latest_consumption/
 
+**Next Launche**
+Retorna o próximo lançamento
+
+	GET http://localhost:8000/launches/next_launche/
+
 **Método CREATE e UPDATE está desativada para está API.**
 
 Clonar repositório:
