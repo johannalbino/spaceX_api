@@ -10,6 +10,13 @@ from timeline.models import Timeline
 
 # Create your models here.
 
+
+class History(models.Model):
+    first_time = models.BooleanField(default=True)
+    latest_launche = models.IntegerField(null=True, blank=True)
+    next_launche = models.IntegerField(null=True, blank=True)
+
+
 class LaunchFailureDetails(models.Model):
     time = models.IntegerField(blank=True, null=True)
     altitude = models.IntegerField(blank=True, null=True)

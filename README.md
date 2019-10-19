@@ -1,62 +1,62 @@
-# Desenvolvimento da SpaceX API com Python/Django e React
+# SpaceX API-consuming application in Python / Django / React
 
 ![spacex_image](https://camo.githubusercontent.com/8caf62499f477b6bf0d3eaff109faff38d5a791e/68747470733a2f2f696d6775722e636f6d2f4a493650754b6c2e706e67)
 
-API em desenvolvimento
+API under development
 
-Objetivo:
-Elaborar uma API em Python/Django que consuma a API da SpaceX API e seja capaz apresentar as seguintes informações:
+**Objective:**
+Develop a Python API that consumes the SpaceX API and is capable of presenting the following information:
 
-	Último Lançamento	
-	Próximo Lançamento	
-	Todos os Lançamentos
+	Latest Launche	
+	Next Launche	
+	All Launches
 
-Além disso desenvolver o frontend em React que irá consumir a API criada e apresentar as informações acima.
+Develop the application front end in the ReactJS programming language to consume the created API and present the above information.
 
-# Instruções:
+# API Guide:
 
 **All Launches**
-Com esse link você deleta tudo que está no banco de dados e consome a API da SpaceX novamente e armazena no banco de dados novamente:
+Deletes everything in the database and consumes the SpaceX API storing in the database again:
 
     POST http://localhost:8000/launches/consumption_api/
 
-Observação: Esse processo pode levar alguns minutos, em média 10 minutos.
+Note: This process may take a few minutes, on average 10 minutes.
 
 **Latest Launche**
-Verificar qual o ultimo lançamento
 
     GET http://localhost:8000/launches/latest_consumption/
 
 **Next Launche**
-Retorna o próximo lançamento
 
 	GET http://localhost:8000/launches/next_launche/
 
-**Método CREATE e UPDATE está desativada para está API.**
+**CREATE, DELETE, UPDATE methods are disabled in this application.**
 
-Clonar repositório:
+Clone repository:
 
     git clone https://github.com/johannalbino/spaceX_api.git
 
-O projeto é divido em dois diretórios:
+The project is division in two parts/directory:
 
     Frontend (React)
     Backend (Python/Django/RestFramework)
 
-As bibliotecas utilizadas se encontram na pasta de cada módulo:
+The libraries used are in the folder of each module:
 
-    package.json - Bibliotecas do React
-    requirements.txt - Bibliotecas do Python
+    package.json - React Library 
+    requirements.txt - Python Library
 
 
-Para instalar as bibliotecas do React é só digitar o comando no diretório frontend/spacex_app/:
+# Instructions
+
+ReactJS libraries installation. Note: Must do this in the directory frontend/spacex_app/
 
     npm install
 
-Para instalar as bibliotecas do Python é só digitar o comando no diretório backend:
+Python libraries installation. Note: Must do this in the directory backend.
 
     pip install -r requirements.txt
 
-# Ferramentas utilizadas para o desenvolvimento:
-    Pycharm - IDE para trabalhar com Python/Django
-    Visual Studio Code - IDE para trabalhar com React/JS
+# Tools used for application development:
+    Pycharm
+    Visual Studio Code
