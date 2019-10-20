@@ -3,6 +3,8 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { getLatestLaunche } from '../../services/launchesService'
 import { Slide } from 'react-slideshow-image';
+import TableSimpleInfo from '../commom/tableSimpleInfo'
+
 
 
 export default function LatestLaunche(){
@@ -52,8 +54,8 @@ export default function LatestLaunche(){
             setIsLoading(true)
             try{
                     const {data} = await getLatestLaunche()
-                    setDataLaunche(data.Results[0])
-                    getImagesObject(data.Results[0])
+                    setDataLaunche(data.results[0])
+                    getImagesObject(data.results[0])
             }
             catch(error){
                 alert(error)
@@ -99,6 +101,7 @@ export default function LatestLaunche(){
                             </div>
                     </Slide>                                       
                 </div>
+                <TableSimpleInfo dataLaunche={dataLaunche} />
             </Container>            
         </React.Fragment>
     )

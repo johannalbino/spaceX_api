@@ -4,12 +4,17 @@ from rest_framework.response import Response
 from .uteis import ConsumptionApi
 from .models import Launches, LaunchFailureDetails
 from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class LaunchFailureDetailsViewSet(viewsets.ModelViewSet):
     queryset = LaunchFailureDetails.objects.all()
     serializer_class = LaunchFailureDetailsSerializer
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 class LaunchesViewSet(viewsets.ModelViewSet):
     """
@@ -18,6 +23,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     queryset = Launches.objects.all()
     serializer_class = LaunchesSerializer
     consumption = ConsumptionApi.ConsumptionAPI()
+    pagination_class = StandardResultsSetPagination
 
     def list(self, request, *args, **kwargs):
         """
@@ -28,6 +34,10 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :return:
         """
         queryset = Launches.objects.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = LaunchesSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = LaunchesSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -52,14 +62,14 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         id_flight_number = self.consumption.get_latest_launche()
         queryset = Launches.objects.filter(flight_number=id_flight_number)
         serializer = LaunchesSerializer(queryset, many=True)
-        return Response({'Results': serializer.data})
+        return Response({'results': serializer.data})
 
     @action(methods=['get'], detail=False)
     def next_launche(self, request):
         id_flight_number = self.consumption.get_next_launche()
         queryset = Launches.objects.filter(flight_number=id_flight_number)
         serializer = LaunchesSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({'results': serializer.data})
 
     def create(self, request, *args, **kwargs):
         return Response({'msg': 'CREATE option not available for this application.'},

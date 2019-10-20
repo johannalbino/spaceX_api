@@ -53,7 +53,7 @@ class ConsumptionAPI(object):
 
     @classmethod
     def get_next_launche(cls):
-        req_api = requests.get('https://api.spacexdata.com/v3/launches/next/')
+        req_api = requests.get('https://api.spacexdata.com/v3/launches/next')
         info_latest_api = req_api.json()
         flight_number = info_latest_api['flight_number']
         return flight_number

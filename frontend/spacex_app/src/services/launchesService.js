@@ -1,7 +1,7 @@
 import http from './httpService'
 
-export function getLaunchesAll(params){
-    return http.get('/launches/', { params })
+export function getLaunchesAll(){
+    return http.get('/launches/')
 }
 
 export function getLatestLaunche(){
@@ -13,5 +13,5 @@ export function updateLaunchesAPI(){
 }
 
 export function nextLaunche(){
-    return http.post('/launches/next_launche/')
+    return http.get('/launches/next_launche/')
 }
