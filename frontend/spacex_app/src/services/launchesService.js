@@ -15,3 +15,4 @@ export function updateLaunchesAPI(){
 export function nextLaunche(){
     return http.get('/launches/next_launche/')
 }
+}
