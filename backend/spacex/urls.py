@@ -24,6 +24,7 @@ from telemetry.views import TelemetryViewSet
 from launch_site.views import LaunchSiteViewSet
 from links.views import LinksViewSet
 from timeline.views import TimelineViewSet
+from .views import coverage
 
 router = routers.DefaultRouter()
 router.register(r'launches', LaunchesViewSet)
@@ -38,4 +39,5 @@ router.register(r'launches', LaunchesViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('coverage/', coverage)
 ]

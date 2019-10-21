@@ -54,7 +54,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
                 serializer = LaunchesSerializer().create(data)
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer)
-            return Response(status=status.HTTP_201_CREATED)
+            return Response({'msg': 'Consumption successfully completed'},status=status.HTTP_201_CREATED)
 
         except:
             return Response({'msg': 'Error trying to save'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
