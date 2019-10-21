@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 function Header() {
   const classes = useStyles();
   const itens = [
-    {text: 'Lançamentos', path: '/lauches'},
+    {text: 'Lançamentos', path: '/launches'},
     {text: 'Ultimo Lançamento', path: '/lastest_launche'},
     {text: 'Próximo Lançamento', path:'/next_launche'}
   ];

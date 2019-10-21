@@ -1,7 +1,7 @@
 import http from './httpService'
 
-export function getLaunchesAll(){
-    return http.get('/launches/')
+export function getLaunchesAll(params){
+    return http.get('/launches/', {params})
 }
 
 export function getLatestLaunche(){

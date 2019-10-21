@@ -10,7 +10,7 @@ function App({ match }) {
   return (
     <React.Fragment>
       <Header />
-        <Route path="/lauches" component={Launches} />
+        <Route path="/launches" component={Launches} />
         <Route path="/lastest_launche" component={LatestLaunche} />
         <Route path="/next_launche" component={NextLaunche} />
         <Redirect from="/" exact to={'/launches' } />
