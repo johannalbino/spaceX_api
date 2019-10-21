@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import { getLatestLaunche } from '../../services/launchesService'
+import { nextLaunche } from '../../services/launchesService'
 import { Slide } from 'react-slideshow-image';
 import TableSimpleInfo from '../commom/tableSimpleInfo'
 
@@ -53,7 +53,8 @@ export default function LatestLaunche(){
         const fetchLaunches = async () => {
             setIsLoading(true)
             try{
-                    const {data} = await getLatestLaunche()
+                    const {data} = await nextLaunche()
+                    console.log(data.results)
                     setDataLaunche(data.results[0])
                     getImagesObject(data.results[0])
             }

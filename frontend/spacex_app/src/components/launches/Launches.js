@@ -1,25 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { LaunchesTable } from './TableLaunches'
+
 
 const useStyles = makeStyles(() => ({
-    gridContainer: {
-      paddingTop: 15,
-      paddingLeft: 10,
-      paddingRight: 10,
-      minHeight: 'calc(100% - 150px)',
-      display: 'flex',
-      flexDirection: 'row'
-    }
+    
  }));
 
 export default function Launches(){
+    const [isLoading, setIsLoading] = useState(false)
     const classes = useStyles();
+
     return(
         <React.Fragment>
-            <div className={classes.gridContainer}>
-                
-
-            </div>
+            <Container fixed>
+                    <LaunchesTable />  
+            </Container>  
         </React.Fragment>
     )
 }

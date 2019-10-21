@@ -4,11 +4,18 @@ from rest_framework.response import Response
 from .uteis import ConsumptionApi
 from .models import Launches, LaunchFailureDetails
 from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class LaunchFailureDetailsViewSet(viewsets.ModelViewSet):
     queryset = LaunchFailureDetails.objects.all()
     serializer_class = LaunchFailureDetailsSerializer
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class LaunchesViewSet(viewsets.ModelViewSet):
@@ -18,6 +25,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     queryset = Launches.objects.all()
     serializer_class = LaunchesSerializer
     consumption = ConsumptionApi.ConsumptionAPI()
+    pagination_class = StandardResultsSetPagination
 
     def list(self, request, *args, **kwargs):
         """
@@ -28,6 +36,10 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :return:
         """
         queryset = Launches.objects.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = LaunchesSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = LaunchesSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -45,28 +57,30 @@ class LaunchesViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
 
         except:
-            print('Deu erro')
-            return Response({'msg': 'Erro ao salvar'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'msg': 'Error trying to save'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['get'], detail=False)
     def latest_consumption(self, request):
         id_flight_number = self.consumption.get_latest_launche()
         queryset = Launches.objects.filter(flight_number=id_flight_number)
         serializer = LaunchesSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({'results': serializer.data})
+
+    @action(methods=['get'], detail=False)
+    def next_launche(self, request):
+        id_flight_number = self.consumption.get_next_launche()
+        queryset = Launches.objects.filter(flight_number=id_flight_number)
+        serializer = LaunchesSerializer(queryset, many=True)
+        return Response({'results': serializer.data})
 
     def create(self, request, *args, **kwargs):
-        return Response({'msg': 'Opção CREATE não está disponível para esta API.'},
+        return Response({'msg': 'CREATE option not available for this application.'},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, *args, **kwargs):
-        return Response({'msg': 'Opção UPDATE não está disponível para esta API.'},
+        return Response({'msg': 'UPDATE option not available for this application.'},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def perform_create(self, serializer):
-        serializer.save()
-
     def destroy(self, request, *args, **kwargs):
-        queryset = Launches.objects.all().delete()
-        serializer = LaunchesSerializer(queryset, many=True)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'msg': 'DELETE option not available for this application.'},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
