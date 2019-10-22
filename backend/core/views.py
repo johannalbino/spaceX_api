@@ -5,11 +5,27 @@ from .uteis import ConsumptionApi
 from .models import Launches, LaunchFailureDetails
 from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer
 from rest_framework.pagination import PageNumberPagination
+from django_filters import rest_framework as filters
 
 
 class LaunchFailureDetailsViewSet(viewsets.ModelViewSet):
     queryset = LaunchFailureDetails.objects.all()
     serializer_class = LaunchFailureDetailsSerializer
+
+
+class LaunchesFilter(filters.FilterSet):
+    flight_number = filters.CharFilter(lookup_expr='icontains')
+    mission_name = filters.CharFilter(lookup_expr='icontains')
+    launch_year = filters.CharFilter(lookup_expr='icontains')
+    launch_date_unix = filters.CharFilter(lookup_expr='icontains')
+    launch_date_utc = filters.CharFilter(lookup_expr='icontains')
+    is_tentative = filters.CharFilter(lookup_expr='icontains')
+    launch_success = filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Launches
+        fields = ('flight_number', 'mission_name', 'launch_year', 'launch_date_unix', 'launch_date_utc',
+                  'is_tentative', 'launch_success')
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -26,6 +42,10 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     serializer_class = LaunchesSerializer
     consumption = ConsumptionApi.ConsumptionAPI()
     pagination_class = StandardResultsSetPagination
+    filterset_class = LaunchesFilter
+
+    def get_queryset(self):
+        return self.queryset
 
     def list(self, request, *args, **kwargs):
         """
@@ -35,7 +55,7 @@ class LaunchesViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        queryset = Launches.objects.all()
+        queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = LaunchesSerializer(page, many=True)

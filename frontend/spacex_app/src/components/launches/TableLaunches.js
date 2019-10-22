@@ -37,24 +37,21 @@ export function LaunchesTable() {
     const [smShow, setSmShow] = useState(false)
     const [columns, setColumns] = useState([
     { path: 'flight_number', label: 'Flight Number', display : true,  viewColumns: true },
-    { path: 'launch_year', label: 'Launch Year', display : true,  viewColumns: true },
+    { path: 'mission_name', label: 'Mission Name', display : true,  viewColumns: true },
     { path: 'launch_date_unix', label: 'Launch Date Unix', display : true,  viewColumns: true },
     { path: 'launch_date_utc', label: 'Launch Date UTC', display : true,  viewColumns: true },
     { path: 'launch_date_local', label: 'Launch Date Local', display : true,  viewColumns: true },
     {
         path: 'is_tentative',
         label: 'Tentative',
-        align: 'right',
         display : true,  
-        viewColumns: true,
-        format: value => value.toLocaleString(),
+        viewColumns: true
     },
     {
         path: 'launch_success',
         label: 'Launch Success',
-        align: 'right',
-        display : true,  viewColumns: true,
-        format: value => value.toLocaleString(),
+        display : true,  
+        viewColumns: true,
     }
     ]);
 
