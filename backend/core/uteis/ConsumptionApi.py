@@ -14,17 +14,17 @@ class ConsumptionAPI(object):
         _list_field = []
         for a, b in dic.items():
             if list is not type(b) is not dict:
-                if 'flickr_images' in a:
-                    for c in b:
-                        _field_images[a] = c
-                        _list_field.append(_field_images)
-                    _field[a] = _list_field
-                else:
-                    _field[a] = b
+                _field[a] = b
             elif type(b) is dict:
                 _field[a] = self.create_order_dict(b)
             else:
-                _field[a] = self.create_list_order_dict(a, b)
+                if 'flickr_images' in a:
+                    for c in b:
+                        _field_images[a] = c
+                        _list_field.append(OrderedDict([(a, c)]))
+                    _field[a] = _list_field
+                else:
+                    _field[a] = self.create_list_order_dict(a, b)
         return _field
 
     def create_list_order_dict(self, key, lis):
@@ -41,8 +41,8 @@ class ConsumptionAPI(object):
                     _dict_filed[key] = a
                     _list_field.append(_dict_filed)
                 return _list_field
-
-        return _list_field
+        else:
+            return _list_field
 
     @classmethod
     def get_latest_launche(cls):

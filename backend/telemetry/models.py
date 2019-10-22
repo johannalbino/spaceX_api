@@ -7,4 +7,4 @@ class Telemetry(models.Model):
     flight_club = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.flight_club
+        return str(self.flight_club)

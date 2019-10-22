@@ -8,19 +8,22 @@ from links.models import Links
 from timeline.models import Timeline
 
 
-# Create your models here.
-
-
 class History(models.Model):
     first_time = models.BooleanField(default=True)
     latest_launche = models.IntegerField(null=True, blank=True)
     next_launche = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.first_time)
 
 
 class LaunchFailureDetails(models.Model):
     time = models.IntegerField(blank=True, null=True)
     altitude = models.IntegerField(blank=True, null=True)
     reason = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
 
 
 class Launches(models.Model):
@@ -56,7 +59,6 @@ class Launches(models.Model):
     last_wiki_update = models.DateTimeField(blank=True, null=True)
     launch_date_source = models.CharField(max_length=100, null=True, blank=True)
 
-
     def __str__(self):
-        return str(self.flight_number) + ' ' + self.mission_name
+        return str(self.flight_number)
 

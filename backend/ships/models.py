@@ -7,4 +7,4 @@ class Ships(models.Model):
     ships = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return self.ships
+        return str(self.ships)

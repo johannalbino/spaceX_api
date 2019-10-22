@@ -9,4 +9,4 @@ class LaunchSite(models.Model):
     site_name_long = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.site_id + ' ' + self.site_name
+        return str(self.site_id)

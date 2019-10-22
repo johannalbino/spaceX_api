@@ -16,8 +16,11 @@ class Cores(models.Model):
     landing_vehicle = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return self.core_serial + ' ' + str(self.flight)
+        return str(self.core_serial)
 
 
 class FirstStage(models.Model):
     cores = models.ManyToManyField(Cores, blank=True)
+
+    def __str__(self):
+        return str(self.cores)

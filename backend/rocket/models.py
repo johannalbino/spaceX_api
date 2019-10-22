@@ -15,4 +15,4 @@ class Rocket(models.Model):
     fairings = models.ForeignKey(Fairings, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self):
-        return self.rocket_id + ' ' + self.rocket_name
+        return str(self.rocket_id)

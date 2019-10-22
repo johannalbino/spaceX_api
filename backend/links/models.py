@@ -7,7 +7,7 @@ class FlickrImages(models.Model):
     flickr_images = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.link_images
+        return str(self.flickr_images)
 
 
 class Links(models.Model):
@@ -25,4 +25,4 @@ class Links(models.Model):
     flickr_images = models.ManyToManyField(FlickrImages, blank=True)
 
     def __str__(self):
-        return self.mission_patch + ' ' + self.mission_patch_small
+        return str(self.mission_patch)

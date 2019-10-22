@@ -21,21 +21,21 @@ class OrbitParams(models.Model):
     mean_anomaly = models.DecimalField(max_digits=20, decimal_places=10, blank=True, null=True)
 
     def __str__(self):
-        return self.reference_system + ' ' + self.regime
+        return str(self.reference_system)
 
 
 class Customers(models.Model):
     customers = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.customers
+        return str(self.customers)
 
 
 class Norad(models.Model):
     norad_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.norad_id
+        return str(self.norad_id)
 
 
 class Payloads(models.Model):
@@ -58,9 +58,12 @@ class Payloads(models.Model):
     uid = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
-        return self.payload_id
+        return str(self.payload_id)
 
 
 class SecondStage(models.Model):
     block = models.IntegerField(blank=True, null=True)
     payloads = models.ManyToManyField(Payloads, blank=True)
+
+    def __str__(self):
+        return str(self.block)

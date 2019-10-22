@@ -9,3 +9,5 @@ class Fairings(models.Model):
     recovered = models.BooleanField(blank=True, null=True)
     ship = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        return str(self.reused)
