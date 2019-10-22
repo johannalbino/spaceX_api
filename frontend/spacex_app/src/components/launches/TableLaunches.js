@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '../commom/Pagination';
 import { getLaunchesAll } from '../../services/launchesService'
 import { CircularProgress } from '@material-ui/core';
-import AlertComponent from '../commom/Alert'
+import AlertComponent from '../commom/AlertAsking'
 
 
 const useStyles = makeStyles(theme => ({

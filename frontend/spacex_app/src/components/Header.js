@@ -17,7 +17,13 @@ const useStyles = makeStyles(theme => ({
   },
   menu: {
     flexGrow: 1,
-    display: 'none',
+    '& a:visited' : {
+      textDecoration: "underline"
+    },
+    '& a:link' : {
+      textTransform: "none",
+      textDecoration: "none"
+    },
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(1),
       display: 'block'
@@ -47,7 +53,7 @@ function Header() {
           <div className={classes.menu}>
             {itens.map((item, index) => (
               <Link to={item.path}>
-                <Button color="primary" key={index}>
+                <Button key={index}>
                   {item.text}
                 </Button>
               </Link>

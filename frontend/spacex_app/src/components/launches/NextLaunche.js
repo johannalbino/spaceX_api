@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { nextLaunche } from '../../services/launchesService'
 import { Slide } from 'react-slideshow-image';
 import TableSimpleInfo from '../commom/tableSimpleInfo'
+import Grid from 'antd/lib/card/Grid';
 
 
 
@@ -36,6 +37,12 @@ export default function LatestLaunche(){
                 textAlign: "center"
             }            
         },
+        container: {
+            padding: "0 10% 0 10%"
+        },
+        header: {
+            textAlign: "center"
+        }
     }));
 
     const properties = {
@@ -86,24 +93,28 @@ export default function LatestLaunche(){
     const classes = useStyles()
     return(
         <React.Fragment>
-            <Container fixed>
-                <h1>{ dataLaunche['mission_name'] }</h1>
-                <div className={classes.sliderContainer}>
-                    <Slide {...properties}>
-                        <div className={classes.eachSlide}>
-                                <div style={{'backgroundImage': `url(${images[0]})`, 'backgroundSize': '100% 550px'}}>
-                                    
-                                </div>
-                            </div>
+            <Grid container className={classes.container}>       
+                <Grid item xs={12} className={classes.header}>
+                    <h1>{ dataLaunche['mission_name'] }</h1>
+                </Grid>     
+                <Grid item xs={12} >                
+                    <div className={classes.sliderContainer}>
+                        <Slide {...properties}>
                             <div className={classes.eachSlide}>
-                                <div style={{'backgroundImage': `url(${images[1]})`, 'backgroundSize': '100% 550px'}}>
-                                    
+                                    <div style={{'backgroundImage': `url(${images[0]})`, 'backgroundSize': '100% 550px'}}>
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                    </Slide>                                       
-                </div>
-                <TableSimpleInfo dataLaunche={dataLaunche} />
-            </Container>            
+                                <div className={classes.eachSlide}>
+                                    <div style={{'backgroundImage': `url(${images[1]})`, 'backgroundSize': '100% 550px'}}>
+                                        
+                                    </div>
+                                </div>
+                        </Slide>                                       
+                    </div>
+                    <TableSimpleInfo dataLaunche={dataLaunche} />
+                </Grid>
+            </Grid>            
         </React.Fragment>
     )
 }
