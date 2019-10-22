@@ -7,9 +7,9 @@ import { ThemeProvider } from '@material-ui/styles';
 import theme from './theme'
 
 ReactDOM.render(
-    <ThemeProvider theme={theme}>
+    <ThemeProvider >
         <BrowserRouter>
-            <App />
+            <App theme={theme} />
         </BrowserRouter>
     </ThemeProvider>
     ,

@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { getLatestLaunche } from '../../services/launchesService'
 import { Slide } from 'react-slideshow-image';
 import TableSimpleInfo from '../commom/tableSimpleInfo'
+import { Grid } from '@material-ui/core';
 
 
 
@@ -36,6 +37,12 @@ export default function LatestLaunche(){
                 textAlign: "center"
             }            
         },
+        container: {
+            padding: "0 10% 0 10%"
+        },
+        header: {
+            textAlign: "center"
+        }
     }));
 
     const properties = {
@@ -85,8 +92,11 @@ export default function LatestLaunche(){
     const classes = useStyles()
     return(
         <React.Fragment>
-            <Container fixed>
-                <h1>{ dataLaunche['mission_name'] }</h1>
+            <Grid container className={classes.container}>
+                <Grid item xs={12} className={classes.header}>
+                    <h1>{ dataLaunche['mission_name'] }</h1>
+                </Grid>
+                <Grid item xs={12}>
                 <div className={classes.sliderContainer}>
                     <Slide {...properties}>
                         <div className={classes.eachSlide}>
@@ -102,7 +112,8 @@ export default function LatestLaunche(){
                     </Slide>                                       
                 </div>
                 <TableSimpleInfo dataLaunche={dataLaunche} />
-            </Container>            
+                </Grid>
+            </Grid>            
         </React.Fragment>
     )
 }
