@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .uteis import ConsumptionApi
-from .models import Launches, LaunchFailureDetails
-from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer
+from .models import Launches, LaunchFailureDetails, History
+from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer, HistorySerializer
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
@@ -66,8 +66,13 @@ class LaunchesViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def consumption_api(self, request):
         try:
+            History.objects.all().delete()
             queryset = Launches.objects.all().delete()
             serializer = LaunchesSerializer(queryset, many=True)
+
+            latest_launche = self.consumption.get_latest_launche()
+            next_launche = self.consumption.get_next_launche()
+            History.objects.create(first_time=False, latest_launche=latest_launche, next_launche=next_launche)
 
             data_req = self.consumption.search_all()
             for data in data_req:
@@ -81,16 +86,50 @@ class LaunchesViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False)
     def latest_consumption(self, request):
-        id_flight_number = self.consumption.get_latest_launche()
-        queryset = Launches.objects.filter(flight_number=id_flight_number)
-        serializer = LaunchesSerializer(queryset, many=True)
+        _id_flight = 1
+        queryset = History.objects.all()
+        serializer = HistorySerializer(queryset, many=True)
+
+        if serializer.data.__len__() > 1:
+            History.objects.all().delete()
+        if serializer.data.__len__() < 1:
+            History.objects.create(first_time=False, latest_launche=0, next_launche=0)
+        if serializer.data.__len__() == 1:
+            _id_flight = serializer.data[0]
+
+        try:
+            id_flight_number = self.consumption.get_latest_launche()
+            History.objects.filter(id=_id_flight['id']).update(latest_launche=id_flight_number)
+            queryset = Launches.objects.filter(flight_number=id_flight_number)
+            serializer = LaunchesSerializer(queryset, many=True)
+        except:
+            queryset = Launches.objects.filter(flight_number=_id_flight['latest_launche'])
+            serializer = LaunchesSerializer(queryset, many=True)
+
         return Response({'results': serializer.data})
 
     @action(methods=['get'], detail=False)
     def next_launche(self, request):
-        id_flight_number = self.consumption.get_next_launche()
-        queryset = Launches.objects.filter(flight_number=id_flight_number)
-        serializer = LaunchesSerializer(queryset, many=True)
+        _id_flight = 1
+        queryset = History.objects.all()
+        serializer = HistorySerializer(queryset, many=True)
+
+        if serializer.data.__len__() > 1:
+            History.objects.all().delete()
+        if serializer.data.__len__() < 1:
+            History.objects.create(first_time=False, latest_launche=0, next_launche=0)
+        if serializer.data.__len__() == 1:
+            _id_flight = serializer.data[0]
+
+        try:
+            id_flight_number = self.consumption.get_next_launche()
+            History.objects.filter(id=_id_flight['id']).update(next_launche=id_flight_number)
+            queryset = Launches.objects.filter(flight_number=id_flight_number)
+            serializer = LaunchesSerializer(queryset, many=True)
+        except:
+            queryset = Launches.objects.filter(flight_number=_id_flight['next_launche'])
+            serializer = LaunchesSerializer(queryset, many=True)
+
         return Response({'results': serializer.data})
 
     def create(self, request, *args, **kwargs):

@@ -4,6 +4,10 @@ export function getLaunchesAll(params){
     return http.get('/launches/', {params})
 }
 
+export function postConsumptionAPI(){
+    return http.post('/launches/consumption_api/')
+}
+
 export function getLatestLaunche(){
     return http.get('/launches/latest_consumption/')
 }

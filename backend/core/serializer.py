@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Launches, LaunchFailureDetails
+from .models import Launches, LaunchFailureDetails, History
 from mission.serializer import MissionSerializer
 from rocket.serializer import RocketSerializer
 from ships.serializer import ShipsSerializer
@@ -15,6 +15,12 @@ from launch_site.models import LaunchSite
 from links.models import Links
 from timeline.models import Timeline
 from .uteis import ConsumptionApi
+
+
+class HistorySerializer(ModelSerializer):
+    class Meta:
+        model = History
+        fields = ['id', 'first_time', 'latest_launche', 'next_launche']
 
 
 class LaunchFailureDetailsSerializer(ModelSerializer):
