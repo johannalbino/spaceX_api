@@ -100,15 +100,14 @@ export default function LatestLaunche(){
                 <div className={classes.sliderContainer}>
                     <Slide {...properties}>
                         <div className={classes.eachSlide}>
-                                <div style={{'backgroundImage': `url(${images[0]})`, 'backgroundSize': '100% 550px'}}>
-                                    
-                                </div>
-                            </div>
-                            <div className={classes.eachSlide}>
-                                <div style={{'backgroundImage': `url(${images[1]})`, 'backgroundSize': '100% 550px'}}>
-                                    
-                                </div>
-                            </div>
+                            <div style={{'backgroundImage': `url(${images[0]})`, 'backgroundSize': '100% 550px'}}></div>
+                        </div>
+                        <div className={classes.eachSlide}>
+                            <div style={{'backgroundImage': `url(${images[1]})`, 'backgroundSize': '100% 550px'}}></div>
+                        </div>
+                        <div className={classes.eachSlide}>
+                            <div style={{'backgroundImage': `url(${images[2]})`, 'backgroundSize': '100% 550px'}}></div>
+                        </div>
                     </Slide>                                       
                 </div>
                 <TableSimpleInfo dataLaunche={dataLaunche} />
