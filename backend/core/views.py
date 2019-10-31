@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -6,6 +7,8 @@ from .models import Launches, LaunchFailureDetails, History
 from .serializer import LaunchesSerializer, LaunchFailureDetailsSerializer, HistorySerializer
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
+from .uteis.csv_parser import CsvParser
+csv_parser = CsvParser()
 
 
 class LaunchFailureDetailsViewSet(viewsets.ModelViewSet):
@@ -82,7 +85,8 @@ class LaunchesViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'Consumption successfully completed'},status=status.HTTP_201_CREATED)
 
         except:
-            return Response({'msg': 'Error trying to save'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'msg': 'Error trying to save, check the api that is being consumed'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['get'], detail=False)
     def latest_consumption(self, request):
@@ -131,6 +135,15 @@ class LaunchesViewSet(viewsets.ModelViewSet):
             serializer = LaunchesSerializer(queryset, many=True)
 
         return Response({'results': serializer.data})
+
+    @action(methods=['get'], detail=False)
+    def export_file(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = LaunchesSerializer(queryset, many=True)
+        csv = csv_parser.generate_csv(serializer.data)
+        response = HttpResponse(csv.to_csv(path_or_buf=None, sep=';'), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="launches.csv"'
+        return response
 
     def create(self, request, *args, **kwargs):
         return Response({'msg': 'CREATE option not available for this application.'},

@@ -28,7 +28,6 @@ export function LaunchesTable() {
     const [launches, setLaunches] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const [pageTitle, setPageTitle] = useState();
     const [count, setCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [filters, setFilters] = useState({});

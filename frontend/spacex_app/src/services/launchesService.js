@@ -8,6 +8,10 @@ export function postConsumptionAPI(){
     return http.post('/launches/consumption_api/')
 }
 
+export function getExportFile(params){
+    return http.get('/launches/export_file/', {params})
+}
+
 export function getLatestLaunche(){
     return http.get('/launches/latest_consumption/')
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles'
 import { LaunchesTable } from './TableLaunches'
-import { Grid } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Grid } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
-import { postConsumptionAPI } from '../../services/launchesService'
+import { postConsumptionAPI, getExportFile } from '../../services/launchesService'
 import Link from '@material-ui/core/Link'
 
 
@@ -21,7 +21,8 @@ const useStyles = makeStyles(() => ({
         width: "100%",
     },
     button: {
-        margin: "25px 0 0 0",
+        margin: "32px 0 0 0",
+        fontSize: "10px"
     },
     divButton: {
         textAlign: "right"
@@ -59,6 +60,17 @@ export default function Launches(){
         setIsLoading(false)        
     }
 
+    const handleExportFile = async () => {
+        setIsLoading(true)
+        try{
+            console.log('oi')
+        }
+        catch(error){
+            setMsg(error)
+        }
+        setIsLoading(false)        
+    }
+
     return(
         <React.Fragment>
             <Grid container className={classes.container}>
@@ -75,21 +87,28 @@ export default function Launches(){
                             Atualizar Dados
                         </Button>
                     </Link>
+                    <Link
+                    onClick={() => handleExportFile()}
+                    >
+                        <Button variant="outlined" className={classes.button}>
+                            Exportar CSV
+                        </Button>
+                    </Link>
                 </Grid>
-                
-                {isLoading?(
-                    <div className={classes.processUpload}>
-                        <CircularProgress size={100} />
-                        <div>Processando...</div>
-                        <div>Esse processo pode demorar até 10 minutos.</div>
-                    </div>
+                <Grid>                
+                    {isLoading?(
+                        <div className={classes.processUpload}>
+                            <CircularProgress size={100} />
+                            <div>Processando...</div>
+                            <div>Esse processo pode demorar até 10 minutos.</div>
+                        </div>
 
-                    ) : (
-                        <Grid item xs={12}>
-                            <LaunchesTable />
-                        </Grid>
-                )}
-                
+                        ) : (
+                            <Grid item xs={12}>
+                                <LaunchesTable />
+                            </Grid>
+                    )}
+                </Grid>                
             </Grid>
         </React.Fragment>
     )
